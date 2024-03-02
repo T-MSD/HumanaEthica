@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.auth.domain.AuthUser;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.domain.Participation;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.domain.Assessment;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,4 +40,9 @@ public class Volunteer extends User {
         this.participationList.remove(participation);
     }
 
+
+
+    @OneToMany(mappedBy = "volunteer")
+    private List<Assessment> assessments = new ArrayList<>();
 }
+
