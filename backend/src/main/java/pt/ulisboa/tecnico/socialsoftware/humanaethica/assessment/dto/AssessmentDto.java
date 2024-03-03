@@ -16,7 +16,19 @@ public class AssessmentDto {
     public AssessmentDto() {
     }
 
+    public AssessmentDto(Assessment assessment, boolean deepCopyInstitution) {
 
+        setId(assessment.getId());
+        setReview(assessment.getReview());
+        setReviewDate(DateHandler.toISOString(assessment.getReviewDate()));
+
+        if (deepCopyInstitution && (assessment.getInstitution() != null)) {
+            setInstitution(new InstitutionDto(assessment.getInstitution(), false, false));
+
+        }
+
+
+    }
 
     public Integer getId() {
         return id;
