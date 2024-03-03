@@ -45,11 +45,15 @@ public class Assessment {
         setReview(assessmentDto.getReview());
         setReviewDate(DateHandler.toLocalDateTime(assessmentDto.getReviewDate()));
 
+        verifyInvariants();
+
     }
 
     public void update(AssessmentDto assessmentDto) {
         setReview(assessmentDto.getReview());
         setReviewDate(DateHandler.toLocalDateTime(assessmentDto.getReviewDate()));
+
+        verifyInvariants();
     }
 
     public Integer getId() {
@@ -87,6 +91,22 @@ public class Assessment {
     public void setVolunteer(Volunteer volunteer) {
         this.volunteer = volunteer;
     }
+
+
+    private void verifyInvariants() {
+        reviewLength();
+
+    }
+
+
+    private void reviewLength(String review) {
+        if (this.review == null || this.review.length() < 10) {
+            throw new HEException(REVIEW_LENGTH, this.review);
+        }
+    }
+
+
+
 
 
 
