@@ -54,8 +54,12 @@ public enum ErrorMessage {
 
 
     // Assessment
-    ASSESSMENT_INVALID_REVIEW_LENGTH("Review length is invalid, need atleast 10 characters");
+    ASSESSMENT_INVALID_REVIEW_LENGTH("Review length is invalid, need atleast 10 characters"),
 
+
+
+
+    ASSESSMENT_INSTITUTION_ALREADY_EVALUATED("A volunteer can only evaluate an institution once");
 
     public final String label;
 
