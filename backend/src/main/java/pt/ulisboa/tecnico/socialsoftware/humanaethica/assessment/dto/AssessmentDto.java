@@ -26,8 +26,7 @@ public class AssessmentDto {
             setInstitution(new InstitutionDto(assessment.getInstitution(), false, false));
 
         }
-
-
+        
     }
 
     public Integer getId() {
