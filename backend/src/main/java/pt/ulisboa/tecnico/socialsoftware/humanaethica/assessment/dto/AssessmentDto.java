@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.dto;
 
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.domain.Assessment;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.institution.dto.InstitutionDto;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler;
 
 
@@ -10,6 +11,7 @@ public class AssessmentDto {
     private Integer id;
     private String review;
     private String reviewDate;
+    private Volunteer volunteer;
 
     private InstitutionDto institution;
 
@@ -21,12 +23,13 @@ public class AssessmentDto {
         setId(assessment.getId());
         setReview(assessment.getReview());
         setReviewDate(DateHandler.toISOString(assessment.getReviewDate()));
+        setVolunteer(assessment.getVolunteer());
 
         if (deepCopyInstitution && (assessment.getInstitution() != null)) {
             setInstitution(new InstitutionDto(assessment.getInstitution(), false, false));
 
         }
-        
+
     }
 
     public Integer getId() {
@@ -53,6 +56,14 @@ public class AssessmentDto {
         this.reviewDate = reviewDate;
     }
 
+    public Volunteer getVolunteer() {
+        return volunteer;
+    }
+
+    public void setVolunteer(Volunteer volunteer) {
+        this.volunteer = volunteer;
+    }
+
     public InstitutionDto getInstitution() {
         return institution;
     }
@@ -68,6 +79,7 @@ public class AssessmentDto {
                 "id=" + id +
                 ", review='" + review + '\'' +
                 ", reviewDate=" + reviewDate +
+                ", volunteer=" + volunteer +
                 ", institution=" + institution +
                 '}';
     }
