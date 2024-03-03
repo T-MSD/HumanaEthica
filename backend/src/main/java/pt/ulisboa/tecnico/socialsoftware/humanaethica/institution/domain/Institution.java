@@ -5,6 +5,7 @@ import org.springframework.security.crypto.keygen.KeyGenerators;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.theme.domain.Theme;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Member;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.domain.Assessment;
 
@@ -49,6 +50,18 @@ public class Institution {
     @OneToMany(mappedBy = "institution")
     private List<Assessment> assessments = new ArrayList<>();
 
+    public void addAssessment(Assessment assessment) {
+        this.assessments.add(assessment);
+    }
+
+    public boolean getAssessmentsWithVolunteer(Volunteer volunteer){
+        for (Assessment assessment : assessments){
+            if (assessment.getVolunteer() == volunteer){
+                return true;
+            }
+        }
+        return false;
+    }
     public Institution() {
     }
 

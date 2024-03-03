@@ -44,7 +44,7 @@ public class Assessment {
         setVolunteer(volunteer);
         setReview(assessmentDto.getReview());
         setReviewDate(DateHandler.toLocalDateTime(assessmentDto.getReviewDate()));
-
+        addAssessmentToInstitution(institution);
         verifyInvariants();
 
     }
@@ -92,18 +92,27 @@ public class Assessment {
         this.volunteer = volunteer;
     }
 
+    public void addAssessmentToInstitution(Institution institution) {
+        institution.addAssessment(this);
+    }
 
     private void verifyInvariants() {
         reviewLength();
-
+        institutionAlreadyEvaluated();
     }
-
 
     private void reviewLength() {
         if (this.review == null || this.review.length() < 10) {
             throw new HEException(ASSESSMENT_INVALID_REVIEW_LENGTH);
         }
     }
+
+    private void institutionAlreadyEvaluated() {
+        if (this.institution.getAssessmentsWithVolunteer(this.volunteer)){
+            throw new HEException(ASSESSMENT_INSTITUTION_ALREADY_EVALUATED);
+        }
+    }
+
 
 
 

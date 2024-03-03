@@ -42,8 +42,9 @@ public enum ErrorMessage {
     ACTIVITY_ALREADY_REPORTED("Activity is already reported with name %s"),
 
     // Assessment
-    ASSESSMENT_INVALID_REVIEW_LENGTH("Review length is invalid, need atleast 10 characters");
+    ASSESSMENT_INVALID_REVIEW_LENGTH("Review length is invalid, need atleast 10 characters"),
 
+    ASSESSMENT_INSTITUTION_ALREADY_EVALUATED("A volunteer can only evaluate an institution once");
     public final String label;
 
     ErrorMessage(String label) {
