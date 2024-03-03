@@ -39,7 +39,18 @@ public class Assessment {
     public Assessment() {
     }
 
-    
+    public Assessment(AssessmentDto assessmentDto, Institution institution, Volunteer volunteer) {
+        setInstitution(institution);
+        setVolunteer(volunteer);
+        setReview(assessmentDto.getReview());
+        setReviewDate(DateHandler.toLocalDateTime(assessmentDto.getReviewDate()));
+
+    }
+
+    public void update(AssessmentDto assessmentDto) {
+        setReview(assessmentDto.getReview());
+        setReviewDate(DateHandler.toLocalDateTime(assessmentDto.getReviewDate()));
+    }
 
     public Integer getId() {
         return id;
