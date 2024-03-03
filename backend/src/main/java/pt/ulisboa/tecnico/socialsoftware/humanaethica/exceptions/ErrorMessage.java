@@ -59,7 +59,10 @@ public enum ErrorMessage {
 
 
 
-    ASSESSMENT_INSTITUTION_ALREADY_EVALUATED("A volunteer can only evaluate an institution once");
+
+    ASSESSMENT_INSTITUTION_ALREADY_EVALUATED("A volunteer can only evaluate an institution once"),
+
+    ASSESSMENT_NO_COMPLETED_ACTIVITIES("An institution can only be evaluated when it has completed at least one activity");
 
     public final String label;
 

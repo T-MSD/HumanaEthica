@@ -99,6 +99,7 @@ public class Assessment {
     private void verifyInvariants() {
         reviewLength();
         institutionAlreadyEvaluated();
+        canBeEvaluated();
     }
 
     private void reviewLength() {
@@ -108,8 +109,14 @@ public class Assessment {
     }
 
     private void institutionAlreadyEvaluated() {
-        if (this.institution.getAssessmentsWithVolunteer(this.volunteer)){
+        if (this.institution.checkAssessmentsWithVolunteer(this.volunteer)){
             throw new HEException(ASSESSMENT_INSTITUTION_ALREADY_EVALUATED);
+        }
+    }
+
+    private void canBeEvaluated(){
+        if (!this.institution.checkForCompletedActivity()){
+            throw new HEException(ASSESSMENT_NO_COMPLETED_ACTIVITIES);
         }
     }
 

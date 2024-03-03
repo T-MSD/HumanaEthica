@@ -50,18 +50,6 @@ public class Institution {
     @OneToMany(mappedBy = "institution")
     private List<Assessment> assessments = new ArrayList<>();
 
-    public void addAssessment(Assessment assessment) {
-        this.assessments.add(assessment);
-    }
-
-    public boolean getAssessmentsWithVolunteer(Volunteer volunteer){
-        for (Assessment assessment : assessments){
-            if (assessment.getVolunteer() == volunteer){
-                return true;
-            }
-        }
-        return false;
-    }
     public Institution() {
     }
 
@@ -183,6 +171,28 @@ public class Institution {
 
     public void addActivity(Activity activity) {
         this.activities.add(activity);
+    }
+
+    public void addAssessment(Assessment assessment) {
+        this.assessments.add(assessment);
+    }
+
+    public boolean checkAssessmentsWithVolunteer(Volunteer volunteer){
+        for (Assessment assessment : assessments){
+            if (assessment.getVolunteer() == volunteer){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkForCompletedActivity(){
+        for (Activity activity: activities){
+            if (activity.getState() == Activity.State.APPROVED){
+                return true;
+            }
+        }
+        return false;
     }
 
     public String generateConfirmationToken() {
