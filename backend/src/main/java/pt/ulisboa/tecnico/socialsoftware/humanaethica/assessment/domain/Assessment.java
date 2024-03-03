@@ -99,9 +99,9 @@ public class Assessment {
     }
 
 
-    private void reviewLength(String review) {
+    private void reviewLength() {
         if (this.review == null || this.review.length() < 10) {
-            throw new HEException(REVIEW_LENGTH, this.review);
+            throw new HEException(ASSESSMENT_INVALID_REVIEW_LENGTH);
         }
     }
 

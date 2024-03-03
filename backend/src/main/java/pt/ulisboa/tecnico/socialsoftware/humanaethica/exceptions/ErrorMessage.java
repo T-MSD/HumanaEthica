@@ -41,6 +41,7 @@ public enum ErrorMessage {
     ACTIVITY_ALREADY_EXISTS("Activity already exists in database"),
     ACTIVITY_ALREADY_SUSPENDED("Activity is already suspended with name %s"),
     ACTIVITY_ALREADY_REPORTED("Activity is already reported with name %s"),
+
     ACTIVITY_ID_NULL("Activity Id cannot be null"),
 
     // Participation
@@ -49,7 +50,12 @@ public enum ErrorMessage {
     PARTICIPATION_ACTIVITY_ONGOING("Activity application deadline hasn't passed"),
     PARTICIPATION_VOLUNTEER_ALREADY_SET("Volunteer is already participating in the activity"),
     PARTICIPATION_DTO_NULL("ParticipationDto cannot be null"),
-    VOLUNTEER_NULL("Volunteer cannot be null");
+    VOLUNTEER_NULL("Volunteer cannot be null"),
+
+
+    // Assessment
+    ASSESSMENT_INVALID_REVIEW_LENGTH("Review length is invalid, need atleast 10 characters");
+
 
     public final String label;
 
