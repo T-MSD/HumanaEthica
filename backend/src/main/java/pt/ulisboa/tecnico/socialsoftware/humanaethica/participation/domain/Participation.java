@@ -2,12 +2,13 @@ package pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.domain;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler;
 
-import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity;
-import pt.ulisboa.tecnico.socialsoftware.humanaethica.user;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
 
 
-@entity
+@Entity
 @Table(name = "participation")
 public class Participation {
 
