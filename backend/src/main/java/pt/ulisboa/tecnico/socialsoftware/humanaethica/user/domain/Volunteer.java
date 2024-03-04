@@ -3,6 +3,8 @@ package pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain;
 import jakarta.persistence.*;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.auth.domain.AuthUser;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.domain.Enrollment;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.institution.domain.Institution;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,20 @@ import java.util.List;
 @Entity
 @DiscriminatorValue(User.UserTypes.VOLUNTEER)
 public class Volunteer extends User {
+
+    @ManyToOne
+    private Institution institution; //
+
+    @OneToOne
+    private Activity activity;
+
+    @OneToMany(mappedBy = "volunteer")
+    private List<Enrollment> enrollments = new ArrayList<>();
+
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
+    }
+
     public Volunteer() {
     }
 
@@ -20,8 +36,4 @@ public class Volunteer extends User {
     public Volunteer(String name, State state) {
         super(name, Role.VOLUNTEER, state);
     }
-
-
-
-    //**********************************************************************************************************/
 }
