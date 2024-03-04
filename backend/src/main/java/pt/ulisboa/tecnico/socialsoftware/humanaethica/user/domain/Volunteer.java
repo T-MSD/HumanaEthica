@@ -5,6 +5,8 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.auth.domain.AuthUser;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.domain.Participation;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.domain.Assessment;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.domain.Enrollment;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.institution.domain.Institution;
 
 
 import java.util.ArrayList;
@@ -14,8 +16,22 @@ import java.util.List;
 @DiscriminatorValue(User.UserTypes.VOLUNTEER)
 public class Volunteer extends User {
 
+
     @OneToMany(mappedBy = "volunteer")
     private List<Participation> participationList = new ArrayList<>();
+
+    @ManyToOne
+    private Institution institution; //
+
+    @OneToOne
+    private Activity activity;
+
+    @OneToMany(mappedBy = "volunteer")
+    private List<Enrollment> enrollments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "volunteer")
+    private List<Assessment> assessments = new ArrayList<>();
+
 
     public Volunteer() {
     }
@@ -40,9 +56,9 @@ public class Volunteer extends User {
         this.participationList.remove(participation);
     }
 
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
+    }
 
-
-    @OneToMany(mappedBy = "volunteer")
-    private List<Assessment> assessments = new ArrayList<>();
 }
 
