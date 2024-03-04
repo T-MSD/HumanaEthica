@@ -36,5 +36,5 @@ public class Volunteer extends User {
     public Volunteer(String name, State state) {
         super(name, Role.VOLUNTEER, state);
     }
-
+    //comentario neca
 }
