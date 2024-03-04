@@ -44,6 +44,7 @@ public enum ErrorMessage {
     // Participation
     PARTICIPATION_ACTIVITY_FULL("Activity is already full"),
     PARTICIPATION_ACTIVITY_OVERFLOW("Activity has more participants than allowed"),
+    PARTICIPATION_ACTIVITY_ONGOING("Activity application deadline hasn't passed"),
     PARTICIPATION_VOLUNTEER_ALREADY_SET("Volunteer is already participating in the activity");
 
     public final String label;

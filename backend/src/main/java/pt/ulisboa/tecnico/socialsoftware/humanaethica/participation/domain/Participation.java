@@ -38,12 +38,16 @@ public class Participation {
         setAcceptanceDate(DateHandler.now());
         setActivity(activity);
         setVolunteer(volunteer);
+
+        verifyInvariants();
     }
 
     public Participation(Activity activity, Integer userId){
         setAcceptanceDate(DateHandler.now());
         setActivity(activity);
         setVolunteer(volunteer);
+
+        verifyInvariants();
     }
 
 
@@ -87,6 +91,7 @@ public class Participation {
     private void verifyInvariants(){
         activityNotFull();
         volunteerNotOnActivity();
+        participationDeadlineOver();
     }
 
     public void activityNotFull(){
@@ -109,6 +114,12 @@ public class Participation {
 
         if(activity.getParticipationList().contains(volunteer)){
             throw new HEException(PARTICIPATION_VOLUNTEER_ALREADY_SET);
+        }
+    }
+
+    public void participationDeadlineOver(){
+        if(DateHandler.now().isAfter(activity.getApplicationDeadline())){
+            throw new HEException(PARTICIPATION_ACTIVITY_ONGOING);
         }
     }
 
