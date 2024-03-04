@@ -11,6 +11,7 @@ public class AssessmentDto {
     private Integer id;
     private String review;
     private String reviewDate;
+
     private Volunteer volunteer;
 
     private InstitutionDto institution;

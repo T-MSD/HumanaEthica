@@ -19,6 +19,7 @@ import java.time.LocalDateTime
 class CreateAssessmentMethodTest extends SpockTest {
     Volunteer volunteer = Mock();
     Institution institution = Mock();
+    Assessment otherAssessment = Mock();
     def assessmentDto
 
     def setup() {
@@ -29,4 +30,25 @@ class CreateAssessmentMethodTest extends SpockTest {
         assessmentDto.setVolunteer(volunteer)
         assessmentDto.setInstitution(institution)
     }
+
+    def "create assessment with volunteer and institution has another assessment"() {
+        given:
+        otherAssessment.getReview() >> ASSESSMENT_REVIEW_2
+        institution.getAssessments() >> [otherAssessment]
+        volunteer.getId() >> VOLUNTEER_ID_1
+
+        when:
+        def result = new Assessment(assessmentDto, institution, volunteer)
+
+        then: "check reuslt"
+        result.getReview() == ASSESSMENT_REVIEW_1
+        result.getReviewData() == DATE
+        result.getInstitution() == institution
+        result.getId() == volunteer
+        and "invocations"
+        1 * institution.addAssessment()
+    }
+
+
+
 }
