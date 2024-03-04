@@ -86,6 +86,7 @@ public class Participation {
 
     private void verifyInvariants(){
         activityNotFull();
+        volunteerNotOnActivity();
     }
 
     public void activityNotFull(){
@@ -101,6 +102,13 @@ public class Participation {
         }
         else{
             throw new HEException(PARTICIPATION_ACTIVITY_OVERFLOW);
+        }
+    }
+
+    public void volunteerNotOnActivity(){
+
+        if(activity.getParticipationList().contains(volunteer)){
+            throw new HEException(PARTICIPATION_VOLUNTEER_ALREADY_SET);
         }
     }
 
