@@ -201,4 +201,8 @@ public class Institution {
         setConfirmationToken(token);
         return token;
     }
+
+    public List<Assessment> getAssessments(){
+        return this.assessments;
+    }
 }
