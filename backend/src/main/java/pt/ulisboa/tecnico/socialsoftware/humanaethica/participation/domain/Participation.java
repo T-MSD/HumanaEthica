@@ -3,6 +3,9 @@ package pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.domain;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException;
+import static pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage.*;
+
 
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
@@ -76,6 +79,29 @@ public class Participation {
 
     public Volunteer getVolunteer() {
         return volunteer;
+    }
+
+
+    // Invariants
+
+    private void verifyInvariants(){
+        activityNotFull();
+    }
+
+    public void activityNotFull(){
+
+        Integer limit = activity.getParticipantsNumberLimit();
+        Integer count = activity.getParticipationList().size();
+
+        if(limit > count){
+            return;
+        }
+        else if(limit == count){
+            throw new HEException(PARTICIPATION_ACTIVITY_FULL);
+        }
+        else{
+            throw new HEException(PARTICIPATION_ACTIVITY_OVERFLOW);
+        }
     }
 
 }

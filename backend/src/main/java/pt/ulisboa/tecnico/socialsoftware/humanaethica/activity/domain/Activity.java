@@ -237,6 +237,18 @@ public class Activity {
         return institution;
     }
 
+    public List<Participation> getParticipationList() {
+        return participationList;
+    }
+
+    public void addParticipation(Participation participation){
+        this.participationList.add(participation);
+    }
+
+    public void removeParticipation(Participation participation){
+        this.participationList.remove(participation);
+    }
+
     private void verifyInvariants() {
         nameIsRequired();
         regionIsRequired();

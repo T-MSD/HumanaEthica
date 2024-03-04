@@ -39,7 +39,11 @@ public enum ErrorMessage {
     ACTIVITY_ALREADY_APPROVED("Activity is already approved with name %s"),
     ACTIVITY_ALREADY_EXISTS("Activity already exists in database"),
     ACTIVITY_ALREADY_SUSPENDED("Activity is already suspended with name %s"),
-    ACTIVITY_ALREADY_REPORTED("Activity is already reported with name %s");
+    ACTIVITY_ALREADY_REPORTED("Activity is already reported with name %s"),
+
+    // Participation
+    PARTICIPATION_ACTIVITY_FULL("Activity is already full"),
+    PARTICIPATION_ACTIVITY_OVERFLOW("Activity has more participants than allowed");
 
     public final String label;
 
