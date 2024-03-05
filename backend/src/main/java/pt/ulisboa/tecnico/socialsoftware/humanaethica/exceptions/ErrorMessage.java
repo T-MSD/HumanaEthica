@@ -56,14 +56,13 @@ public enum ErrorMessage {
     // Assessment
     ASSESSMENT_INVALID_REVIEW_LENGTH("Review length is invalid, need atleast 10 characters"),
 
-
-
-
-
     ASSESSMENT_INSTITUTION_ALREADY_EVALUATED("A volunteer can only evaluate an institution once"),
 
-    ASSESSMENT_NO_COMPLETED_ACTIVITIES("An institution can only be evaluated when it has completed at least one activity");
+    ASSESSMENT_NO_COMPLETED_ACTIVITIES("An institution can only be evaluated when it has completed at least one activity"),
 
+    //Enrollment
+    ENROLLMENT_MOTIVATION_SHOULD_HAVE_10_CHAR("Volunteer should provide a motivation with at least 10 characters"),
+    VOLUNTEER_ALREADY_IN_ANOTHER_ACTIVITY("Volunteer is already  enrolled in another activity");
     public final String label;
 
     ErrorMessage(String label) {
