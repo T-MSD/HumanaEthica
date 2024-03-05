@@ -219,6 +219,7 @@ class SpockTest extends Specification {
         activityDto
     }
 
+
     // participation
 
     public static final Integer RATING_1 = 2
@@ -237,6 +238,12 @@ class SpockTest extends Specification {
         participationDto.setActivity(activity)
         participationDto
     }
+
+
+    // assessment
+
+    public static final String ASSESSMENT_REVIEW_1 = "assessment review 1"
+    public static final String ASSESSMENT_REVIEW_2 = "assessment review 2"
 
 
     // clean database
