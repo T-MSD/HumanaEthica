@@ -10,6 +10,7 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.dto.AssessmentD
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.auth.domain.AuthUser;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.institution.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -22,20 +23,21 @@ public class AssessmentController {
 
     private static final Logger logger = LoggerFactory.getLogger(AssessmentController.class);
 
-    @GetMapping()
-    public List<AssessmentDto> getAssessments(Integer institutionId) {
+    @GetMapping("/{institutionId}")
+    public List<AssessmentDto> getInstitutionAssessments(@PathVariable Integer institutionId) {
         return assessmentService.getAssessmentsByInstitution(institutionId);
     }
 
-    /*
-    @PostMapping()
+
+    @PostMapping("/{institutionId}")
     @PreAuthorize("(hasRole('ROLE_VOLUNTEER'))")
-    public AssessmentDto registerAssessment(Principal principal, @Valid @RequestBody AssessmentDto assessmentDto){
+    public AssessmentDto createAssessment(Principal principal, @PathVariable Integer institutionId,
+                                          @Valid @RequestBody AssessmentDto assessmentDto) {
         int userId = ((AuthUser) ((Authentication) principal).getPrincipal()).getUser().getId();
-        return assessmentService.registerAssessment(UserId, activityDto);
+        return assessmentService.createAssessment(userId, institutionId, assessmentDto);
     }
 
-    */
+
 
 
 }
