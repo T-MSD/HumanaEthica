@@ -43,7 +43,7 @@ public enum ErrorMessage {
 
     //Enrollment
     ENROLLMENT_MOTIVATION_SHOULD_HAVE_10_CHAR("Volunteer should provide a motivation with at least 10 characters"),
-    VOLUNTEER_ALREADY_IN_ANOTHER_ACTIVITY("Volunteer is already  enrolled in another activity");
+    VOLUNTEER_ALREADY_IN_THIS_ACTIVITY("Volunteer is already  enrolled in this activity");
     public final String label;
 
     ErrorMessage(String label) {

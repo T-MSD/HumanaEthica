@@ -87,15 +87,8 @@ public class Enrollment {
     private void verifyInvariants() {
         checkMotivation();
         checkVolunteer();
-        //checkUserIsVolunteer();
     }
 
-    // private void checkUserIsVolunteer(){ //precisamos ou ta certo?
-    //     //ensure the user is a volunteer
-    //     if (this.volunteer.getRole() != Role.VOLUNTEER) {
-    //         throw new HEException(USER_IS_NOT_VOLUNTEER);
-    //     }
-    // }
     private void checkMotivation() {
         if (this.motivation.length() < 10) {
             throw new HEException(ENROLLMENT_MOTIVATION_SHOULD_HAVE_10_CHAR);
@@ -103,17 +96,16 @@ public class Enrollment {
     }
 
     private void checkVolunteer() {
-        if (isVolunteerEnrolledInAnotherActivity()) {
-            throw new HEException(VOLUNTEER_ALREADY_IN_ANOTHER_ACTIVITY);
+        if (isVolunteerEnrolledInThisActivity()) {
+            throw new HEException(VOLUNTEER_ALREADY_IN_THIS_ACTIVITY);
         }
     }
 
-    //check if the volunteer is already enrolled in another activity
-    public boolean isVolunteerEnrolledInAnotherActivity() { //ta certo?
+    public boolean isVolunteerEnrolledInThisActivity() {
         List<Enrollment> enrollments = volunteer.getEnrollments();
         for (Enrollment enrollment : enrollments) {
-            if (enrollment.getId() != this.id && enrollment.getActivity() != null) {
-                // Volunteer is already enrolled in another activity
+            if (enrollment.getActivity().equals(this.getActivity())) {
+                // Volunteer is already in this activity
                 return true;
             }
         }
