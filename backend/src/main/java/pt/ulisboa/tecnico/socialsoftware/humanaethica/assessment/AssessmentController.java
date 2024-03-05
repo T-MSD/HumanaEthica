@@ -23,8 +23,8 @@ public class AssessmentController {
     private static final Logger logger = LoggerFactory.getLogger(AssessmentController.class);
 
     @GetMapping()
-    public List<AssessmentDto> getAssessments() {
-        return assessmentService.getAssessments();
+    public List<AssessmentDto> getAssessments(Integer institutionId) {
+        return assessmentService.getAssessmentsByInstitution(institutionId);
     }
 
     /*

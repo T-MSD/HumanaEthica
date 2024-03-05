@@ -29,10 +29,6 @@ import java.util.stream.Collectors;
 @Service
 public class AssessmentService {
     @Autowired
-    ActivityRepository activityRepository;
-    @Autowired
-    ThemeRepository themeRepository;
-    @Autowired
     UserRepository userRepository;
     @Autowired
     InstitutionRepository institutionRepository;
@@ -40,21 +36,22 @@ public class AssessmentService {
     AssessmentRepository assessmentRepository;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public List<AssessmentDto> getAssessments() {
-        return assessmentRepository.findAll().stream()
+    public List<AssessmentDto> getAssessmentsByInstitution(Integer institutionId) {
+        return assessmentRepository.findById(institutionId).stream()
                 .map(assessment-> new AssessmentDto(assessment,true))
                 .sorted(Comparator.comparing(AssessmentDto::getReview, String.CASE_INSENSITIVE_ORDER))
                 .toList();
     }
 
-   /* @Transactional(isolation = Isolation.READ_COMMITTED)
-   public AssessmentDto registerAssessment(Integer userId, AssessmentDto assessmentDto){
+   @Transactional(isolation = Isolation.READ_COMMITTED)
+   public AssessmentDto createAssessment(Integer userId, Integer institutionId, AssessmentDto assessmentDto){
         if (userId == null) throw new HEException(USER_NOT_FOUND);
         Volunteer volunteer = (Volunteer) userRepository.findById(userId).orElseThrow(() -> new HEException(USER_NOT_FOUND, userId));
-        Institution institution = assessmentDto.getInstitution();
+        if (institutionId == null) throw new HEException(INSTITUTION_NOT_FOUND);
+        Institution institution = institutionRepository.findById(institutionId).orElseThrow(() -> new HEException(INSTITUTION_NOT_FOUND, institutionId));
 
         Assessment assessment = new Assessment(assessmentDto, institution, volunteer);
         assessmentRepository.save(assessment);
         return new AssessmentDto(assessment, true);
-    }*/
+    }
 }
