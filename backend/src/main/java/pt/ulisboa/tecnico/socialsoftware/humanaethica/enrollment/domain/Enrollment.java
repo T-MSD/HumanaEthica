@@ -87,6 +87,7 @@ public class Enrollment {
     private void verifyInvariants() {
         checkMotivation();
         checkVolunteer();
+        checkApplyingAfterDeadLine();
     }
 
     private void checkMotivation() {
@@ -101,7 +102,7 @@ public class Enrollment {
         }
     }
 
-    public boolean isVolunteerEnrolledInThisActivity() {
+    private boolean isVolunteerEnrolledInThisActivity() {
         List<Enrollment> enrollments = volunteer.getEnrollments();
         for (Enrollment enrollment : enrollments) {
             if (enrollment.getActivity().equals(this.getActivity())) {
@@ -110,5 +111,11 @@ public class Enrollment {
             }
         }
         return false;
+    }
+
+    private void checkApplyingAfterDeadLine() {
+        if (getEnrollmentDateTime().compareTo(this.activity.getApplicationDeadline()) > 0) {
+            throw new HEException(APPLICATION_DEADLINE_PASSED);
+        }
     }
 }
