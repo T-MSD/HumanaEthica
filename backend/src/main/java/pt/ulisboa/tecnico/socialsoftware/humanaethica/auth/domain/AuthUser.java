@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.UserService;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.User;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -79,6 +80,12 @@ public abstract class AuthUser implements UserDetails {
 
     public User getUser() {
         return user;
+    }
+
+    public Volunteer getVolunteer() {
+        if (user instanceof Volunteer)
+            return (Volunteer) user;
+        return null;
     }
 
     public void setUser(User user) {
