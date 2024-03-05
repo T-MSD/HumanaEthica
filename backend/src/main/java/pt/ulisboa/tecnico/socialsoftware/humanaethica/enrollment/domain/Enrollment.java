@@ -5,6 +5,7 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.dto.EnrollmentDto;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.User.Role;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler;
 import static pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage.*;
 
@@ -86,6 +87,7 @@ public class Enrollment {
     private void verifyInvariants() {
         checkMotivation();
         checkVolunteer();
+        checkApplyingAfterDeadLine();
     }
 
     private void checkMotivation() {
@@ -95,21 +97,25 @@ public class Enrollment {
     }
 
     private void checkVolunteer() {
-        if (isVolunteerEnrolledInAnotherActivity()) {
-            throw new HEException(VOLUNTEER_ALREADY_IN_ANOTHER_ACTIVITY);
+        if (isVolunteerEnrolledInThisActivity()) {
+            throw new HEException(VOLUNTEER_ALREADY_IN_THIS_ACTIVITY);
         }
     }
 
-    // Custom method to check if the volunteer is already enrolled in another activity
-    // (1.2 A volunteer can only enrol in one activity.)
-    public boolean isVolunteerEnrolledInAnotherActivity() {
+    private boolean isVolunteerEnrolledInThisActivity() {
         List<Enrollment> enrollments = volunteer.getEnrollments();
         for (Enrollment enrollment : enrollments) {
-            if (enrollment.getId() != this.id && enrollment.getActivity() != null) {
-                // Volunteer is already enrolled in another activity
+            if (enrollment.getActivity().equals(this.getActivity())) {
+                // Volunteer is already in this activity
                 return true;
             }
         }
         return false;
+    }
+
+    private void checkApplyingAfterDeadLine() {
+        if (getEnrollmentDateTime().compareTo(this.activity.getApplicationDeadline()) > 0) {
+            throw new HEException(APPLICATION_DEADLINE_PASSED);
+        }
     }
 }
