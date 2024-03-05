@@ -19,15 +19,11 @@ public class EnrollmentDto {
 
     public EnrollmentDto(Enrollment Enrollment) {
         setId(Enrollment.getId());
-        setMotivation(Enrollment.getMotivation()); ////check motivation in enrollment class
+        setMotivation(Enrollment.getMotivation());
         setEnrollmentDateTime(DateHandler.toISOString(Enrollment.getEnrollmentDateTime()));
         setActivity(activity);
-        setVolunteer(volunteer); //check if user is volunteer in enrollment class
-
-        // Perform validation to ensure the user is a volunteer
-        if (!volunteer.getRole().equals("VOLUNTEER")) {
-            throw new IllegalArgumentException("User is not a volunteer");
-        }
+        setVolunteer(volunteer);
+        volunteer.setRole("VOLUNTEER");//preciso?
     }
 
     // Getters and setters...

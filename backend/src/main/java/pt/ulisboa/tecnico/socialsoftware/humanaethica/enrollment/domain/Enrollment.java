@@ -5,6 +5,7 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.dto.EnrollmentDto;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.User.Role;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler;
 import static pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage.*;
 
@@ -86,8 +87,15 @@ public class Enrollment {
     private void verifyInvariants() {
         checkMotivation();
         checkVolunteer();
+        //checkUserIsVolunteer();
     }
 
+    // private void checkUserIsVolunteer(){ //precisamos ou ta certo?
+    //     //ensure the user is a volunteer
+    //     if (this.volunteer.getRole() != Role.VOLUNTEER) {
+    //         throw new HEException(USER_IS_NOT_VOLUNTEER);
+    //     }
+    // }
     private void checkMotivation() {
         if (this.motivation.length() < 10) {
             throw new HEException(ENROLLMENT_MOTIVATION_SHOULD_HAVE_10_CHAR);
@@ -100,9 +108,8 @@ public class Enrollment {
         }
     }
 
-    // Custom method to check if the volunteer is already enrolled in another activity
-    // (1.2 A volunteer can only enrol in one activity.)
-    public boolean isVolunteerEnrolledInAnotherActivity() {
+    //check if the volunteer is already enrolled in another activity
+    public boolean isVolunteerEnrolledInAnotherActivity() { //ta certo?
         List<Enrollment> enrollments = volunteer.getEnrollments();
         for (Enrollment enrollment : enrollments) {
             if (enrollment.getId() != this.id && enrollment.getActivity() != null) {
