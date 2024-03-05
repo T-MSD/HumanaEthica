@@ -1,0 +1,86 @@
+package pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.dto;
+
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.domain.Participation;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.dto.ActivityDto;
+//import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.dto.UserDto;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
+
+import java.time.LocalDateTime;
+
+
+public class ParticipationDto{
+
+    private Integer id;
+    private Integer rating;
+    private LocalDateTime acceptanceDate;
+
+    private ActivityDto activity;
+    private Volunteer volunteer;
+
+
+    public ParticipationDto(){
+
+    }
+
+    public ParticipationDto(Participation participation){
+        setId(participation.getId());
+        setRating(participation.getRating());
+        setAcceptanceDate(participation.getAcceptanceDate());
+
+        setActivity(new ActivityDto(participation.getActivity(), false));
+        setVolunteer(participation.getVolunteer());
+    }
+
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setAcceptanceDate(LocalDateTime acceptanceDate) {
+        this.acceptanceDate = acceptanceDate;
+    }
+
+    public LocalDateTime getAcceptanceDate() {
+        return acceptanceDate;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setActivity(ActivityDto activity) {
+        this.activity = activity;
+    }
+
+    public ActivityDto getActivity() {
+        return activity;
+    }
+
+    public void setVolunteer(Volunteer volunteer) {
+        this.volunteer = volunteer;
+    }
+
+    public Volunteer getVolunteer() {
+        return volunteer;
+    }
+
+
+    @Override
+    public String toString() {
+        return "ParticipationDto{" +
+                "id=" + getId() +
+                ", activity=" + getActivity() +
+                ", volunteer=" + getVolunteer() +
+                ", rating=" + getRating() +
+                ", acceptancedate=" + getAcceptanceDate()
+                + "}";
+    }
+}

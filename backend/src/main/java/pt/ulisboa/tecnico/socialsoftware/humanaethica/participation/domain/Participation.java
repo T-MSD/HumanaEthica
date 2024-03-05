@@ -6,10 +6,8 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException;
 import static pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage.*;
 
-
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
-
 
 @Entity
 @Table(name = "participation")
@@ -85,6 +83,13 @@ public class Participation {
         return volunteer;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getVolunteerId(){
+        return getVolunteer().getId();
+    }
 
     // Invariants
 
