@@ -52,6 +52,18 @@ class CreateAssessmentMethodTest extends SpockTest {
 
     }
 
+    def "review with at least 10 characters"() {
+        given:
+        institution.checkForCompletedActivity() >> true
+        assessmentDto.getReview() >> "1234567890"
+
+        when:
+        def result = new Assessment(assessmentDto, institution, volunteer)
+
+        then: "check result"
+        result.getReview().length() >= 10
+    }
+
     @TestConfiguration
     static class LocalBeanConfiguration extends BeanConfiguration {}
 
