@@ -10,8 +10,6 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.dto.ParticipationDto;
 
-// TODO: activity test tests that it is added to institution and theme but it is not called on activity or DTO,
-//       would need something similar for participation: where/when is it added to volunteer and activity
 
 @Entity
 @Table(name = "participation")
@@ -47,6 +45,10 @@ public class Participation {
         verifyInvariants();
     }
 
+    public void update(ParticipationDto participationDto){
+        setRating(participationDto.getRating());
+        verifyInvariants();
+    }
 
     // sets and gets
 
@@ -118,7 +120,7 @@ public class Participation {
 
     public void volunteerNotOnActivity(){
 
-        if(activity.getParticipationList().contains(volunteer)){
+        if(activity.getParticipationList().stream().anyMatch(participation -> participation != this && participation.getVolunteer() == this.getVolunteer())){
             throw new HEException(PARTICIPATION_VOLUNTEER_ALREADY_SET);
         }
     }
