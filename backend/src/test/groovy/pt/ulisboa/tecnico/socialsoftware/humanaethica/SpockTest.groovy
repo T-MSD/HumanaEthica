@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.crypto.password.PasswordEncoder
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.dto.ActivityDto
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.domain.Assessment
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.dto.AssessmentDto
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.repository.AssessmentRepository
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.auth.AuthUserService
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.auth.dto.AuthDto
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.auth.dto.AuthPasswordDto
@@ -21,6 +24,7 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.institution.InstitutionSer
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.institution.repository.InstitutionRepository
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.repository.ActivityRepository
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.ActivityService
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.AssessmentService
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.theme.repository.ThemeRepository
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.theme.ThemeService
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.dto.ParticipationDto
@@ -242,8 +246,25 @@ class SpockTest extends Specification {
 
     // assessment
 
+    public static final String ASSESSMENT_NAME_1 = "assessment name 1"
+    public static final String ASSESSMENT_NAME_2 = "assessment name 2"
     public static final String ASSESSMENT_REVIEW_1 = "assessment review 1"
     public static final String ASSESSMENT_REVIEW_2 = "assessment review 2"
+
+
+
+    @Autowired
+    AssessmentRepository assessmentRepository
+
+    @Autowired
+    AssessmentService assessmentService
+
+    protected AssessmentDto createAssessmentDto(review, reviewDate) {
+        def assessmentDto = new AssessmentDto()
+        assessmentDto.setReview(review)
+        assessmentDto.setReviewDate(DateHandler.toISOString(reviewDate))
+        assessmentDto
+    }
 
 
     // clean database
@@ -252,6 +273,7 @@ class SpockTest extends Specification {
         participationRepository.deleteAll()
         activityRepository.deleteAllActivityTheme()
         activityRepository.deleteAll()
+        assessmentRepository.deleteAll()
         authUserRepository.deleteAll()
         userRepository.deleteAll()
         institutionRepository.deleteAll()
