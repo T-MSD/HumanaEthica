@@ -8,6 +8,10 @@ import static pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMes
 
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.dto.ParticipationDto;
+
+// TODO: activity test tests that it is added to institution and theme but it is not called on activity or DTO,
+//       would need something similar for participation: where/when is it added to volunteer and activity
 
 @Entity
 @Table(name = "participation")
@@ -31,17 +35,12 @@ public class Participation {
     public Participation(){
     }
 
-    public Participation(Integer rating, Activity activity, Integer userId){
-        setRating(rating);
-        setAcceptanceDate(DateHandler.now());
-        setActivity(activity);
-        setVolunteer(volunteer);
+    public Participation(Activity activity, Volunteer volunteer, ParticipationDto participationDto){
 
-        verifyInvariants();
-    }
+        setRating(participationDto.getRating());
 
-    public Participation(Activity activity, Integer userId){
         setAcceptanceDate(DateHandler.now());
+
         setActivity(activity);
         setVolunteer(volunteer);
 
@@ -69,6 +68,7 @@ public class Participation {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+        activity.addParticipation(this);
     }
 
     public Activity getActivity() {
@@ -77,6 +77,7 @@ public class Participation {
 
     public void setVolunteer(Volunteer volunteer) {
         this.volunteer = volunteer;
+        volunteer.addParticipation(this);
     }
 
     public Volunteer getVolunteer() {
@@ -123,7 +124,7 @@ public class Participation {
     }
 
     public void participationDeadlineOver(){
-        if(DateHandler.now().isAfter(activity.getApplicationDeadline())){
+        if(!DateHandler.now().isAfter(activity.getApplicationDeadline())){
             throw new HEException(PARTICIPATION_ACTIVITY_ONGOING);
         }
     }

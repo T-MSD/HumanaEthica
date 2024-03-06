@@ -214,6 +214,10 @@ class SpockTest extends Specification {
         activityDto
     }
 
+    // participation
+
+    public static final Integer RATING_1 = 2
+
     // clean database
 
     def deleteAll() {
