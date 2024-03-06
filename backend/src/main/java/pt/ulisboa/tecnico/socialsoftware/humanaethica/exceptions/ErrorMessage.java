@@ -45,6 +45,9 @@ public enum ErrorMessage {
     ENROLLMENT_MOTIVATION_SHOULD_HAVE_10_CHAR("Volunteer should provide a motivation with at least 10 characters"),
     VOLUNTEER_ALREADY_IN_THIS_ACTIVITY("Volunteer is already  enrolled in this activity"),
     APPLICATION_DEADLINE_PASSED("Volunteer cannot apply after the closure of the application period.");
+
+
+
     public final String label;
 
     ErrorMessage(String label) {

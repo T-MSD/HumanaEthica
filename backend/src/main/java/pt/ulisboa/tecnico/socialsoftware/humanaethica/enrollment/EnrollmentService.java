@@ -20,11 +20,10 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.repository.UserRepository;
 
+
 @Service
 public class EnrollmentService {
 
-    private static final ErrorMessage USER_NOT_FOUND = null;
-    private static final ErrorMessage ACTIVITY_NOT_FOUND = null;
     @Autowired
     EnrollmentRepository enrollmentRepository;
     @Autowired
@@ -46,8 +45,8 @@ public class EnrollmentService {
 
     public EnrollmentDto registerEnrollment(int  volunteerId, int activityId, EnrollmentDto enrollmentDto) {
 
-        Volunteer volunteer = (Volunteer) userRepository.findById(volunteerId).orElseThrow(() -> new HEException(USER_NOT_FOUND, volunteerId));
-        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new HEException(ACTIVITY_NOT_FOUND, activityId));
+        Volunteer volunteer = (Volunteer) userRepository.findById(volunteerId).orElseThrow(() -> new HEException(ErrorMessage.USER_NOT_FOUND, volunteerId));
+        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new HEException(ErrorMessage.ACTIVITY_NOT_FOUND, activityId));
 
 
         Enrollment enrollment = new Enrollment(activity, volunteer, enrollmentDto);
@@ -56,6 +55,4 @@ public class EnrollmentService {
 
         return new EnrollmentDto(enrollment);
     }
-
-    // Other methods for managing enrollments
 }
