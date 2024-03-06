@@ -59,6 +59,21 @@ class CreateParticipationMethodTest extends SpockTest {
             error.getErrorMessage() == ErrorMessage.PARTICIPATION_ACTIVITY_FULL
     }
 
+    def "violate repeat participation"(){
+        given:
+        Participation participation = Mock()
+        activity.getParticipationList() >> [participation]
+        activity.getParticipantsNumberLimit() >> 2
+        participation.getVolunteer() >> volunteer
+
+        when:
+        def result = new Participation(activity, volunteer, participationDto)
+
+        then:
+        def error = thrown(HEException)
+        error.getErrorMessage() == ErrorMessage.PARTICIPATION_VOLUNTEER_ALREADY_SET
+    }
+
     @TestConfiguration
     static class LocalBeanConfiguration extends BeanConfiguration {}
 }
