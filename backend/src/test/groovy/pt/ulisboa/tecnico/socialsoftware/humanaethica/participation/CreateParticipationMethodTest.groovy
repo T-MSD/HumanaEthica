@@ -50,6 +50,7 @@ class CreateParticipationMethodTest extends SpockTest {
             Participation participation = Mock()
             activity.getParticipantsNumberLimit() >> 1
             activity.getParticipationList() >> [participation]
+            activity.getApplicationDeadline() >> ONE_DAY_AGO
 
         when:
             def result = new Participation(activity, volunteer, participationDto)
@@ -61,17 +62,32 @@ class CreateParticipationMethodTest extends SpockTest {
 
     def "violate repeat participation"(){
         given:
-        Participation participation = Mock()
-        activity.getParticipationList() >> [participation]
-        activity.getParticipantsNumberLimit() >> 2
-        participation.getVolunteer() >> volunteer
+            Participation participation = Mock()
+            participation.getVolunteer() >> volunteer
+            activity.getParticipationList() >> [participation]
+            activity.getParticipantsNumberLimit() >> 2
+            activity.getApplicationDeadline() >> ONE_DAY_AGO
 
         when:
-        def result = new Participation(activity, volunteer, participationDto)
+            def result = new Participation(activity, volunteer, participationDto)
 
         then:
-        def error = thrown(HEException)
-        error.getErrorMessage() == ErrorMessage.PARTICIPATION_VOLUNTEER_ALREADY_SET
+            def error = thrown(HEException)
+            error.getErrorMessage() == ErrorMessage.PARTICIPATION_VOLUNTEER_ALREADY_SET
+    }
+
+    def "violate deadline"(){
+        given:
+            activity.getParticipationList() >> new ArrayList<>()
+            activity.getParticipantsNumberLimit() >> 1
+            activity.getApplicationDeadline() >> IN_ONE_DAY
+
+        when:
+            def result = new Participation(activity, volunteer, participationDto)
+
+        then:
+            def error = thrown(HEException)
+            error.getErrorMessage() == ErrorMessage.PARTICIPATION_ACTIVITY_ONGOING
     }
 
     @TestConfiguration
