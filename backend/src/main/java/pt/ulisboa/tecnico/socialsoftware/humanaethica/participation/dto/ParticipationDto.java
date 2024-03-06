@@ -43,7 +43,7 @@ public class ParticipationDto{
         this.acceptanceDate = acceptanceDate;
     }
 
-    public LocalDateTime getAcceptanceDate() {
+    public String getAcceptanceDate() {
         return acceptanceDate;
     }
 
@@ -79,7 +79,7 @@ public class ParticipationDto{
                 ", activity=" + getActivity() +
                 ", volunteer=" + getVolunteer() +
                 ", rating=" + getRating() +
-                ", acceptancedate='" + acceptanceDate + '\''+
+                ", acceptancedate='" + acceptanceDate + '\''
                 + "}";
     }
 }
