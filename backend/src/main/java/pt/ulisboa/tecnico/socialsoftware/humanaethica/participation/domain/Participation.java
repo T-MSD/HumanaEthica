@@ -90,9 +90,9 @@ public class Participation {
         return id;
     }
 
-    public Integer getVolunteerId(){
+    /*public Integer getVolunteerId(){
         return getVolunteer().getId();
-    }
+    }*/
 
     // Invariants
 

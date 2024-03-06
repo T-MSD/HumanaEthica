@@ -45,10 +45,11 @@ class CreateParticipationMethodTest extends SpockTest {
 
     }
 
+    @Unroll
     def "violate participation limit"(){
         given:
             Participation participation = Mock()
-            activity.getParticipantsNumberLimit() >> 1
+            activity.getParticipantsNumberLimit() >> limit
             activity.getParticipationList() >> [participation]
             activity.getApplicationDeadline() >> ONE_DAY_AGO
 
@@ -57,7 +58,13 @@ class CreateParticipationMethodTest extends SpockTest {
 
         then:
             def error = thrown(HEException)
-            error.getErrorMessage() == ErrorMessage.PARTICIPATION_ACTIVITY_FULL
+            error.getErrorMessage() == errormessage
+
+        where:
+            limit   || errormessage
+            1       || ErrorMessage.PARTICIPATION_ACTIVITY_FULL
+            0       || ErrorMessage.PARTICIPATION_ACTIVITY_OVERFLOW
+
     }
 
     def "violate repeat participation"(){
