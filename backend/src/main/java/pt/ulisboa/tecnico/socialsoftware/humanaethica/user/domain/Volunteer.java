@@ -60,5 +60,9 @@ public class Volunteer extends User {
         return enrollments;
     }
 
+    public void addEnrollment(Enrollment enrollment) {
+        enrollments.add(enrollment);
+    }
+
 }
 

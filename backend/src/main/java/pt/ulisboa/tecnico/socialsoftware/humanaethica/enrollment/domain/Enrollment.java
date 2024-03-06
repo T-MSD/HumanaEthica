@@ -39,6 +39,8 @@ public class Enrollment {
         setEnrollmentDateTime(DateHandler.toLocalDateTime(enrollmentDto.getEnrollmentDateTime()));
 
         verifyInvariants();
+        activity.addEnrollment(this);
+        volunteer.addEnrollment(this);
     }
 
     // Getters and setters...

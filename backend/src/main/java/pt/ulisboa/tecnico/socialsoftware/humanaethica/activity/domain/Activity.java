@@ -245,6 +245,7 @@ public class Activity {
         return institution;
     }
 
+
     public List<Participation> getParticipationList() {
         return participationList;
     }
@@ -255,6 +256,14 @@ public class Activity {
 
     public void removeParticipation(Participation participation){
         this.participationList.remove(participation);
+    }
+
+    public void addEnrollment(Enrollment enrollment) {
+        this.enrollments.add(enrollment);
+    }
+
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
     }
 
     private void verifyInvariants() {
