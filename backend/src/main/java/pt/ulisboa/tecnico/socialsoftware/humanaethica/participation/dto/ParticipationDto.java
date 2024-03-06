@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.dto;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.domain.Participation;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.dto.ActivityDto;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.dto.UserDto;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +12,7 @@ public class ParticipationDto{
 
     private Integer id;
     private Integer rating;
-    private LocalDateTime acceptanceDate;
+    private String acceptanceDate;
     private ActivityDto activity;
     private UserDto volunteer;
 
@@ -23,7 +24,7 @@ public class ParticipationDto{
     public ParticipationDto(Participation participation){
         setId(participation.getId());
         setRating(participation.getRating());
-        setAcceptanceDate(participation.getAcceptanceDate());
+        setAcceptanceDate(DateHandler.toISOString(participation.getAcceptanceDate()));
 
         setActivity(new ActivityDto(participation.getActivity(), false));
         setVolunteer(new UserDto(participation.getVolunteer()));
@@ -78,7 +79,7 @@ public class ParticipationDto{
                 ", activity=" + getActivity() +
                 ", volunteer=" + getVolunteer() +
                 ", rating=" + getRating() +
-                ", acceptancedate=" + getAcceptanceDate()
+                ", acceptancedate='" + getAcceptanceDate() + '\''+
                 + "}";
     }
 }
