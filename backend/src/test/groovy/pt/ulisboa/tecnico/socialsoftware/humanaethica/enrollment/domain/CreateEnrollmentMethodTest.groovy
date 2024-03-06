@@ -6,8 +6,10 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.BeanConfiguration
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.SpockTest
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.dto.EnrollmentDto
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.domain.Enrollment
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.ErrorMessage
 import spock.lang.Unroll
 import spock.lang.Specification
 
@@ -29,7 +31,7 @@ class CreateEnrollmentMethodTest extends SpockTest {
 
     def "create enrollment for volunteer to an activity"() {
         when:
-        Enrollment e = new Enrollment(activity, volunteer, enrollmentDto)
+        def e = new Enrollment(activity, volunteer, enrollmentDto)
 
         then:   
         1 * activity.addEnrollment(e)
