@@ -37,4 +37,8 @@ public class Volunteer extends User {
         super(name, Role.VOLUNTEER, state);
     }
 
+    public void addEnrollment(Enrollment enrollment) {
+        enrollments.add(enrollment);
+    }
+
 }

@@ -241,6 +241,14 @@ public class Activity {
         return institution;
     }
 
+    public void addEnrollment(Enrollment enrollment) {
+        this.enrollments.add(enrollment);
+    }
+
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
+    }
+
     private void verifyInvariants() {
         nameIsRequired();
         regionIsRequired();
