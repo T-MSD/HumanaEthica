@@ -23,7 +23,6 @@ public class EnrollmentDto {
         setEnrollmentDateTime(DateHandler.toISOString(Enrollment.getEnrollmentDateTime()));
         setActivity(activity);
         setVolunteer(volunteer);
-        volunteer.setRole("VOLUNTEER");//preciso?
     }
 
     // Getters and setters...
