@@ -1,8 +1,6 @@
 package pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.dto;
 
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.domain.Assessment;
-import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
-import pt.ulisboa.tecnico.socialsoftware.humanaethica.institution.dto.InstitutionDto;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler;
 
 
@@ -16,7 +14,7 @@ public class AssessmentDto {
     public AssessmentDto() {
     }
 
-    public AssessmentDto(Assessment assessment, boolean deepCopyInstitution) {
+    public AssessmentDto(Assessment assessment) {
 
         setId(assessment.getId());
         setReview(assessment.getReview());

@@ -45,7 +45,7 @@ class CreateAssessmentMethodTest extends SpockTest {
 
 
         when:
-        def result = new Assessment(assessmentDto, institution, volunteer)
+        def result = new Assessment(institution, volunteer, assessmentDto)
 
         then: "check result"
         result.getReview() == ASSESSMENT_REVIEW_1
@@ -63,7 +63,7 @@ class CreateAssessmentMethodTest extends SpockTest {
         assessmentDto.getReview() >> ASSESSMENT_WRONG_REVIEW
 
         when:
-        new Assessment(assessmentDto, institution, volunteer)
+        new Assessment(institution, volunteer, assessmentDto)
 
         then:
         def error = thrown(HEException)
@@ -75,7 +75,7 @@ class CreateAssessmentMethodTest extends SpockTest {
         institution.checkForCompletedActivity() >> false
 
         when:
-        new Assessment(assessmentDto, institution, volunteer)
+        new Assessment(institution, volunteer, assessmentDto)
 
         then:
         def error = thrown(HEException)
