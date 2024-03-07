@@ -1,4 +1,4 @@
-/*package groovy.pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.webservice
+/*package pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.webservice
 
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
@@ -8,15 +8,20 @@ import org.springframework.web.reactive.function.client.WebClient
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.SpockTest
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.domain.Assessment
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.dto.AssessmentDto
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.auth.domain.AuthUser
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.UserService
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.User
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer
-
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class GetInstitutionAssessmentsWebServiceIT extends SpockTest {
     @LocalServerPort
     private int port
+
+
+
 
     def setup() {
         deleteAll()
@@ -27,14 +32,11 @@ class GetInstitutionAssessmentsWebServiceIT extends SpockTest {
 
         def institution = institutionService.getDemoInstitution()
 
-        given: "assessment info"
+        def volunteer = userService.createVolunteerWithAuth(ASSESSMENT_NAME_1, ASSESSMENT_USERNAME_1, ASSESSMENT_EMAIL_1, AuthUser.Type.DEMO, User.State.APPROVED)
+
         def assessmentDto = createAssessmentDto(ASSESSMENT_REVIEW_1, IN_THREE_DAYS)
 
-        and: "a volunteer"
-        def volunteer = new Volunteer()
-
-        and: "an assessment"
-        def assessment = new Assessment(assessmentDto, institution, volunteer)
+        def assessment = new Assessment(assessmentDto, institution, volunteer.getUser())
         assessmentRepository.save(assessment)
 
 
@@ -60,5 +62,8 @@ class GetInstitutionAssessmentsWebServiceIT extends SpockTest {
     }
 }
 
+
  */
+
+
 

@@ -225,7 +225,8 @@ class SpockTest extends Specification {
     public static final String ASSESSMENT_REVIEW_1 = "assessment review 1"
     public static final String ASSESSMENT_REVIEW_2 = "assessment review 2"
     public static final String ASSESSMENT_WRONG_REVIEW = "short"
-
+    public static final String ASSESSMENT_USERNAME_1 = "assessment username 1"
+    public static final String ASSESSMENT_EMAIL_1 = "user1@mail.com"
     @Autowired
     AssessmentRepository assessmentRepository
 

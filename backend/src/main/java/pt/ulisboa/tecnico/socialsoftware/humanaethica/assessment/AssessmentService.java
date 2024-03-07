@@ -38,7 +38,7 @@ public class AssessmentService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<AssessmentDto> getAssessmentsByInstitution(Integer institutionId) {
         return assessmentRepository.findById(institutionId).stream()
-                .map(assessment-> new AssessmentDto(assessment,true))
+                .map(assessment-> new AssessmentDto(assessment))
                 .sorted(Comparator.comparing(AssessmentDto::getReview, String.CASE_INSENSITIVE_ORDER))
                 .toList();
     }
@@ -50,8 +50,8 @@ public class AssessmentService {
         if (institutionId == null) throw new HEException(INSTITUTION_NOT_FOUND);
         Institution institution = institutionRepository.findById(institutionId).orElseThrow(() -> new HEException(INSTITUTION_NOT_FOUND, institutionId));
 
-        Assessment assessment = new Assessment(assessmentDto, institution, volunteer);
+        Assessment assessment = new Assessment(institution, volunteer, assessmentDto);
         assessmentRepository.save(assessment);
-        return new AssessmentDto(assessment, true);
+        return new AssessmentDto(assessment);
     }
 }
