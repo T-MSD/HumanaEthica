@@ -250,6 +250,7 @@ class SpockTest extends Specification {
     public static final String ASSESSMENT_NAME_2 = "assessment name 2"
     public static final String ASSESSMENT_REVIEW_1 = "assessment review 1"
     public static final String ASSESSMENT_REVIEW_2 = "assessment review 2"
+    public static final String ASSESSMENT_WRONG_REVIEW = "short"
 
 
 
