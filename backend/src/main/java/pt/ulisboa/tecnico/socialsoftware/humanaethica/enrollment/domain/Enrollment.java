@@ -9,7 +9,6 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler;
 import static pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "enrollment")
@@ -89,6 +88,7 @@ public class Enrollment {
         checkMotivation();
         checkVolunteer();
         checkApplyingAfterDeadLine();
+
     }
 
     private void checkMotivation() {
@@ -104,15 +104,10 @@ public class Enrollment {
     }
 
     private boolean isVolunteerEnrolledInThisActivity() {
-        List<Enrollment> enrollments = volunteer.getEnrollments();
-        for (Enrollment enrollment : enrollments) {
-            if (enrollment.getActivity().equals(this.getActivity())) {
-                // Volunteer is already in this activity
-                return true;
-            }
-        }
-        return false;
+        return volunteer.getEnrollments().stream()
+                .anyMatch(enrollment -> enrollment.getActivity().equals(this.getActivity()));
     }
+    
 
     private void checkApplyingAfterDeadLine() {
         if (!getEnrollmentDateTime().isBefore(this.activity.getApplicationDeadline())) {

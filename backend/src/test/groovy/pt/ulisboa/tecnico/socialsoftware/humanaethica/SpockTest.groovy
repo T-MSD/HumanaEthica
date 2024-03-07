@@ -54,7 +54,8 @@ class SpockTest extends Specification {
 
     // motivation
 
-    public static final String MOTIVATION = "sggehgb"
+    public static final String MOTIVATION_WRONG = "sggehgb"
+    public static final String MOTIVATION_RIGHT = "1234567890"
 
     // institution
 
