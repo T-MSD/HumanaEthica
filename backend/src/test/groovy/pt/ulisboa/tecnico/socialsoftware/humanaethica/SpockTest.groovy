@@ -25,6 +25,11 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.theme.repository.ThemeRepo
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.theme.ThemeService
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.Mailer
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.repository.EnrollmentRepository
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.EnrollmentService
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.dto.EnrollmentDto
+
+
 import spock.lang.Specification
 
 import java.time.LocalDateTime
@@ -217,6 +222,20 @@ class SpockTest extends Specification {
         activityDto.setApplicationDeadline(DateHandler.toISOString(deadline))
         activityDto.setThemes(themesDto)
         activityDto
+    }
+
+    @Autowired
+    EnrollmentRepository enrollmentRepository
+
+    @Autowired
+    EnrollmentService enrollmentService
+
+
+    protected EnrollmentDto createEnrollmentDto(motivation, dateTime) {
+        def enrollmentDto = new EnrollmentDto()
+        enrollmentDto.setMotivation(MOTIVATION_RIGHT)
+        enrollmentDto.setEnrollmentDateTime(DateHandler.toISOString(dateTime)) 
+        enrollmentDto
     }
 
     // clean database
