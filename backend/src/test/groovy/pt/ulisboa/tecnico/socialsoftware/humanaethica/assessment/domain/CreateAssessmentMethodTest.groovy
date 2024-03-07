@@ -24,7 +24,6 @@ class CreateAssessmentMethodTest extends SpockTest {
     Volunteer volunteer = Mock()
     Institution institution = Mock()
     Assessment otherAssessment = Mock()
-    Activity activity = Mock()
 
     def assessmentDto
 
