@@ -115,7 +115,7 @@ public class Enrollment {
     }
 
     private void checkApplyingAfterDeadLine() {
-        if (getEnrollmentDateTime().compareTo(this.activity.getApplicationDeadline()) > 0) {
+        if (!getEnrollmentDateTime().isBefore(this.activity.getApplicationDeadline())) {
             throw new HEException(APPLICATION_DEADLINE_PASSED);
         }
     }

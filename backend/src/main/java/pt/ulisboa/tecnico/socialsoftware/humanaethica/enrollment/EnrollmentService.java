@@ -1,5 +1,8 @@
 package pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment;
 
+import static pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage.ACTIVITY_NOT_FOUND;
+import static pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage.USER_NOT_FOUND;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -34,8 +37,9 @@ public class EnrollmentService {
 
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public List<EnrollmentDto> getEnrollmentsByActivity(int activityId) {
-        
+    public List<EnrollmentDto> getEnrollmentsByActivity(Integer activityId) {
+        if(activityId == null)throw new HEException(ACTIVITY_NOT_FOUND);
+
         return enrollmentRepository.getEnrollmentsByActivityId(activityId).stream()
             .map(EnrollmentDto::new)  
             .sorted(Comparator.comparing(EnrollmentDto::getId, Comparator.naturalOrder()))
@@ -43,7 +47,10 @@ public class EnrollmentService {
     }
 
 
-    public EnrollmentDto registerEnrollment(int  volunteerId, int activityId, EnrollmentDto enrollmentDto) {
+    public EnrollmentDto registerEnrollment(Integer  volunteerId, Integer activityId, EnrollmentDto enrollmentDto) {
+        if(activityId == null)throw new HEException(ACTIVITY_NOT_FOUND);
+
+        if(volunteerId == null)throw new HEException(USER_NOT_FOUND);
 
         Volunteer volunteer = (Volunteer) userRepository.findById(volunteerId).orElseThrow(() -> new HEException(ErrorMessage.USER_NOT_FOUND, volunteerId));
         Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new HEException(ErrorMessage.ACTIVITY_NOT_FOUND, activityId));

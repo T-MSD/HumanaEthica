@@ -52,6 +52,10 @@ class SpockTest extends Specification {
     public static final LocalDateTime IN_TWO_DAYS = DateHandler.now().plusDays(2)
     public static final LocalDateTime IN_THREE_DAYS = DateHandler.now().plusDays(3)
 
+    // motivation
+
+    public static final String MOTIVATION = "sggehgb"
+
     // institution
 
     public static final String INSTITUTION_1_EMAIL = "institution1@mail.com"
