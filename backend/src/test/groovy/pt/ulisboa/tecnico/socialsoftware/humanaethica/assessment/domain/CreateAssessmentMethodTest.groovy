@@ -24,7 +24,6 @@ class CreateAssessmentMethodTest extends SpockTest {
     Volunteer volunteer = Mock()
     Institution institution = Mock()
     Assessment otherAssessment = Mock()
-    Activity activity = Mock()
 
     def assessmentDto
 
@@ -33,7 +32,6 @@ class CreateAssessmentMethodTest extends SpockTest {
         assessmentDto = new AssessmentDto()
         assessmentDto.review = ASSESSMENT_REVIEW_1
         assessmentDto.reviewDate = DateHandler.toISOString(IN_TWO_DAYS)
-        activity.endingDate = IN_THREE_DAYS
 
 
     }
@@ -62,7 +60,7 @@ class CreateAssessmentMethodTest extends SpockTest {
 
         and:
         assessmentDto = new AssessmentDto()
-        assessmentDto.review = "123456789"
+        assessmentDto.getReview() >> ASSESSMENT_WRONG_REVIEW
 
         when:
         new Assessment(assessmentDto, institution, volunteer)
@@ -72,6 +70,17 @@ class CreateAssessmentMethodTest extends SpockTest {
         error.getErrorMessage() == ErrorMessage.ASSESSMENT_INVALID_REVIEW_LENGTH
     }
 
+    def "An institution can only be evaluated when it has completed at least one activity"() {
+        given:
+        institution.checkForCompletedActivity() >> false
+
+        when:
+        new Assessment(assessmentDto, institution, volunteer)
+
+        then:
+        def error = thrown(HEException)
+        error.getErrorMessage() == ErrorMessage.ASSESSMENT_NO_COMPLETED_ACTIVITIES
+    }
     @TestConfiguration
     static class LocalBeanConfiguration extends BeanConfiguration {}
 
