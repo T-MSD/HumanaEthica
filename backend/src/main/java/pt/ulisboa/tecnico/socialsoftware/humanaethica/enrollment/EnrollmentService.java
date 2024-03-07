@@ -47,12 +47,12 @@ public class EnrollmentService {
     }
 
 
-    public EnrollmentDto registerEnrollment(Integer  volunteerId, Integer activityId, EnrollmentDto enrollmentDto) {
+    public EnrollmentDto createEnrollment(Integer  userId, Integer activityId, EnrollmentDto enrollmentDto) {
         if(activityId == null)throw new HEException(ACTIVITY_NOT_FOUND);
 
-        if(volunteerId == null)throw new HEException(USER_NOT_FOUND);
+        if(userId == null)throw new HEException(USER_NOT_FOUND);
 
-        Volunteer volunteer = (Volunteer) userRepository.findById(volunteerId).orElseThrow(() -> new HEException(ErrorMessage.USER_NOT_FOUND, volunteerId));
+        Volunteer volunteer = (Volunteer) userRepository.findById(userId).orElseThrow(() -> new HEException(ErrorMessage.USER_NOT_FOUND, userId));
         Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new HEException(ErrorMessage.ACTIVITY_NOT_FOUND, activityId));
 
 
