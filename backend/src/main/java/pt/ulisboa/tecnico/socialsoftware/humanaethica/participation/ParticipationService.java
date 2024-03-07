@@ -32,7 +32,7 @@ public class ParticipationService {
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<ParticipationDto> getParticipationsByActivity(Integer activityId){
-        if (activityId == null) throw new HEException(ACTIVITY_NOT_FOUND);
+        if (activityId == null) throw new HEException(ACTIVITY_ID_NULL);
         Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new HEException(ACTIVITY_NOT_FOUND, activityId));
         return participationRepository.findAll().stream()
                 .filter(participation -> participation.getActivity().equals(activity))

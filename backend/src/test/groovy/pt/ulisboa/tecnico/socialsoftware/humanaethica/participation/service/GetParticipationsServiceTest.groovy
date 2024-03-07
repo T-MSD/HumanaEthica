@@ -12,6 +12,8 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.auth.domain.AuthNormalUser
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.dto.ParticipationDto
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.User
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException
 
 @DataJpaTest
 class GetParticipationsServiceTest extends SpockTest {
@@ -62,6 +64,22 @@ class GetParticipationsServiceTest extends SpockTest {
         result.size() == 2
         result.get(0).getVolunteer().getName() == USER_1_NAME
         result.get(1).getVolunteer().getName() == USER_2_NAME
+    }
+
+    def 'wrong activity id'() {
+        when:
+        def result = participationService.getParticipationsByActivity(activityId+1)
+        then:
+        def error = thrown(HEException)
+        error.getErrorMessage() == ErrorMessage.ACTIVITY_NOT_FOUND
+    }
+
+    def 'null activity id'() {
+        when:
+        def result = participationService.getParticipationsByActivity(null)
+        then:
+        def error = thrown(HEException)
+        error.getErrorMessage() == ErrorMessage.ACTIVITY_ID_NULL
     }
 
     @TestConfiguration
