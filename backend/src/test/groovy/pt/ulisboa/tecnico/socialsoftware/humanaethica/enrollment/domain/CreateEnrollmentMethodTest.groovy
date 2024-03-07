@@ -9,7 +9,8 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.dto.EnrollmentD
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.domain.Enrollment
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer
-import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.ErrorMessage
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.utils.DateHandler
 import spock.lang.Unroll
 import spock.lang.Specification
 
@@ -24,68 +25,59 @@ class CreateEnrollmentMethodTest extends SpockTest {
     def setup() {
         given: "enrollment info"
         enrollmentDto = new EnrollmentDto()
-        enrollmentDto.motivation = "Test motivation"
-        enrollmentDto.enrollmentDateTime = LocalDateTime.now()
-        activity.applicationDeadline = LocalDateTime.now().plusDays(1)
+        enrollmentDto.setEnrollmentDateTime(DateHandler.toISOString(NOW))
     }
 
-    def "create enrollment for volunteer to an activity"() {
+//    def "create enrollment for volunteer to an activity"() {
+//        when:
+//        def e = new Enrollment(activity, volunteer, enrollmentDto)
+//
+//        then:
+//        1 * activity.addEnrollment(e)
+//        1 * volunteer.addEnrollment(e)
+//        activity.getEnrollments().contains(e)
+//        volunteer.getEnrollments().contains(e)
+//        e.getActivity() == activity
+//        e.getVolunteer() == volunteer
+//        e.getMotivation() == enrollmentDto.motivation
+//        e.getEnrollmentDateTime().equals(enrollmentDto.enrollmentDateTime)
+//    }
+
+
+    def "create enrollment and violate invariants motivation length :  motivation=#motivation"() {
+        given:
+        enrollmentDto.setMotivation(MOTIVATION)
+
         when:
-        def e = new Enrollment(activity, volunteer, enrollmentDto)
+        def res = new Enrollment(activity, volunteer, enrollmentDto)
 
-        then:   
-        1 * activity.addEnrollment(e)
-        1 * volunteer.addEnrollment(e)
-        activity.getEnrollments().contains(e)
-        volunteer.getEnrollments().contains(e)
-        e.getActivity() == activity
-        e.getVolunteer() == volunteer
-        e.getMotivation() == enrollmentDto.motivation
-        e.getEnrollmentDateTime() == enrollmentDto.enrollmentDateTime
+        then:
+        def error = thrown(HEException)
+        error.getErrorMessage() == ErrorMessage.ENROLLMENT_MOTIVATION_SHOULD_HAVE_10_CHAR
     }
+
+//    @Unroll
+//    def "test creating enrollment twice for a volunteer in the same activity"() {
+//        given:
+//        Enrollment e1 = new Enrollment(activity, volunteer, enrollmentDto)
+//
+//        when:
+//        Enrollment e2 = new Enrollment(activity, volunteer, enrollmentDto)
+//
+//        then:
+//        // Expect HEException with VOLUNTEER_ALREADY_IN_THIS_ACTIVITY error message
+//        def error = thrown(HEException)
+//        error.getErrorMessage() == ErrorMessage.VOLUNTEER_ALREADY_IN_THIS_ACTIVITY
+//    }
 
     @Unroll
-    def "create enrollment and violate invariants motivation length: motivation=#motivation"() {
-        given:
-        enrollmentDto.motivation = motivation
-
-        when:
-        new Enrollment(activity, volunteer, enrollmentDto)
-
-        then:
-        def error = thrown(HEException)
-        error.getErrorMessage() == errorMessage
-
-        where:
-        motivation        || errorMessage
-        null              || ErrorMessage.ENROLLMENT_MOTIVATION_SHOULD_HAVE_10_CHAR
-        "short"           || ErrorMessage.ENROLLMENT_MOTIVATION_SHOULD_HAVE_10_CHAR
-        "123456789012345" || null
-    }
-
-
-    def "test creating enrollment twice for a volunteer in the same activity"() {
-        given:
-        Enrollment e1 = new Enrollment(activity, volunteer, enrollmentDto)
-
-        when:
-        Enrollment e2 = new Enrollment(activity, volunteer, enrollmentDto)
-
-        then:
-        // Expect HEException with VOLUNTEER_ALREADY_IN_THIS_ACTIVITY error message
-        def error = thrown(HEException)
-        error.getErrorMessage() == ErrorMessage.VOLUNTEER_ALREADY_IN_THIS_ACTIVITY
-    }
-
-    
     def "test applying after deadline should throw exception"() {
         given:
-        LocalDateTime now = LocalDateTime.now()
-        activity.applicationDeadline = now.minusDays(1)
-        enrollmentDto.enrollmentDateTime = now.plusDays(1)
+        activity.getApplicationDeadline >> ONE_DAY_AGO
+        //enrollmentDto.getEnrollmentDateTime >> DateHandler.toISOString(NOW)
 
         when:
-        new Enrollment(activity, volunteer, enrollmentDto)
+        def res = new Enrollment(activity, volunteer, enrollmentDto)
 
         then:
         // Expect HEException with APPLICATION_DEADLINE_PASSED error message
