@@ -37,8 +37,6 @@ public class ParticipationService {
         return participationRepository.findAll().stream()
                 .filter(participation -> participation.getActivity().equals(activity))
                 .map(participation -> new ParticipationDto(participation))
-                .sorted(Comparator.comparing(ParticipationDto::getVolunteer)
-                    .thenComparing(Comparator.comparing(Volunteer::getName, String.CASE_INSENSITIVE_ORDER)))
                 .toList();
     }
 
