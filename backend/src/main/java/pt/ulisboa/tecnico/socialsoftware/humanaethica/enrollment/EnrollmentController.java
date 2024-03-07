@@ -31,7 +31,7 @@ public class EnrollmentController {
     public EnrollmentDto registerEnrollment(@PathVariable int volunteerId, 
     @PathVariable int activityId , @Valid @RequestBody EnrollmentDto enrollmentDto){
 
-        return enrollmentService.registerEnrollment(volunteerId, activityId, enrollmentDto);
+        return enrollmentService.createEnrollment(volunteerId, activityId, enrollmentDto);
     }
    
 
