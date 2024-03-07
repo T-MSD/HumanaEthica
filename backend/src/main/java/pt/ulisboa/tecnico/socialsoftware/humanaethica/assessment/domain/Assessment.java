@@ -42,7 +42,7 @@ public class Assessment {
         setVolunteer(volunteer);
         setReview(assessmentDto.getReview());
         setReviewDate(DateHandler.toLocalDateTime(assessmentDto.getReviewDate()));
-        addAssessmentToInstitution(institution);
+        addAssessmentToInstitution();
         verifyInvariants();
 
     }
@@ -90,8 +90,8 @@ public class Assessment {
         this.volunteer = volunteer;
     }
 
-    public void addAssessmentToInstitution(Institution institution) {
-        institution.addAssessment(this);
+    public void addAssessmentToInstitution() {
+        this.institution.addAssessment(this);
     }
 
     private void verifyInvariants() {
