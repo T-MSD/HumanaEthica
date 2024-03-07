@@ -7,39 +7,74 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.SpockTest
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.repository.ActivityRepository
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.domain.Enrollment
-import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.EnrollmentService
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.dto.EnrollmentDto
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment.repository.EnrollmentRepository
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.repository.UserRepository
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.theme.domain.Theme
 import spock.lang.Unroll
 
 @DataJpaTest
-class RegisterEnrollmentServiceTest extends SpockTest {
-    public static final Integer EXISTING_VOLUNTEER_ID = 1
-    public static final Integer EXISTING_ACTIVITY_ID = 1
+class CreateEnrollmentServiceTest extends SpockTest {
+    
 
-    def userRepository
-    def activityRepository
+    def institution
+    def theme
+    def volunteer
+    def activity
     def enrollmentRepository
-    def enrollmentService
+
+    
 
     def setup() {
-        userRepository = Mock()
-        activityRepository = Mock()
-        enrollmentRepository = Mock()
-        enrollmentService = new EnrollmentService(userRepository, activityRepository, enrollmentRepository)
+        volunteer = authUserService.loginDemoVolunteerAuth().getUser()
+        institution = institutionService.getDemoInstitution()
+        theme = new Theme(THEME_NAME_1, Theme.State.APPROVED,null)
+        themeRepository.save(theme)
+        
+    }
+
+    def 'test createEnrollment for user id #userId and activity id #activityId'() {
+        given:"an enrollment dto"
+
+        def activityDto = createActivityDto(ACTIVITY_NAME_1,ACTIVITY_REGION_1,1,ACTIVITY_DESCRIPTION_1,
+                IN_ONE_DAY,IN_TWO_DAYS,IN_THREE_DAYS,themesDto)
+
+        activity = new Activity(activityDto, institution, theme)
+        activityRepository.save(activity)
+
+        def enrollmentDto = createEnrollmentDto(MOTIVATION_RIGHT, NOW)
+
+        when:
+        def result = enrollmentService.createEnrollment(volunteer.getId(), activity.getId(), enrollmentDto)
+
+        then: "the returned data is correct"
+
+        result.motivation == MOTIVATION_RIGHT
+        result.enrollmentDateTime == DateHandler.toISOString(NOW)
+        result.activity.id == activity.getId()
+        result.volunteer.id == volunteer.getId()    
+
+        and: "the enrollment is saved in the database"
+        enrollmentRepository.findAll().size() == 1
+
+        and: "the stored data is correct"
+        def storedEnrollment = enrollmentRepository.findById(result.id).get()
+        storedEnrollment.motivation == MOTIVATION_RIGHT
+        storedEnrollment.enrollmentDateTime == NOW
+        storedEnrollment.activity.id == activity.getId()
+        storedEnrollment.volunteer.id == volunteer.getId()
 
     }
 
+
+/*
     @Unroll
-    def 'test get enrollments by activity for activity id #activityId'() {
+    def 'test getEnrollmentsByActivity for activity id #activityId'() {
         given:
         // Create some enrollments for the given activity
-        def activity = new Activity()
-        activity.setId(EXISTING_ACTIVITY_ID)
         def volunteer = new Volunteer()
         volunteer.setId(EXISTING_VOLUNTEER_ID)
         def enrollment1 = new Enrollment(activity, volunteer, new EnrollmentDto())
@@ -53,27 +88,10 @@ class RegisterEnrollmentServiceTest extends SpockTest {
         enrollments.size() == expectedEnrollmentsSize
 
         where:
-        activityId           | expectedEnrollmentsSize
+        activityId | expectedEnrollmentsSize
         EXISTING_ACTIVITY_ID | 2
-        2                    | 0 // Non-existing activity id
+        NON_EXISTING_ACTIVITY_ID | 0 // Non-existing activity ID
     }
-
-    @Unroll
-    def 'test register enrollment for user id #userId and activity id #activityId'() {
-        given:
-        def enrollmentDto = new EnrollmentDto()
-        enrollmentDto.setMotivation("Motivation")
-
-        when:
-        def result = enrollmentService.registerEnrollment(userId, activityId, enrollmentDto)
-
-        then:
-        result != null
-
-        where:
-        userId                | activityId
-        EXISTING_VOLUNTEER_ID | EXISTING_ACTIVITY_ID
-        EXISTING_VOLUNTEER_ID | 2 // Non-existing activity id
-        2                     | EXISTING_ACTIVITY_ID // Non-existing user id
-    }
+    */
+    
 }
