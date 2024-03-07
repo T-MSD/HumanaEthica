@@ -24,6 +24,7 @@ class CreateAssessmentMethodTest extends SpockTest {
     Volunteer volunteer = Mock()
     Institution institution = Mock()
     Assessment otherAssessment = Mock()
+    Activity activity = Mock()
 
     def assessmentDto
 
@@ -32,6 +33,8 @@ class CreateAssessmentMethodTest extends SpockTest {
         assessmentDto = new AssessmentDto()
         assessmentDto.review = ASSESSMENT_REVIEW_1
         assessmentDto.reviewDate = DateHandler.toISOString(IN_TWO_DAYS)
+        activity.endingDate = IN_THREE_DAYS
+
 
     }
 
@@ -40,6 +43,8 @@ class CreateAssessmentMethodTest extends SpockTest {
         otherAssessment.getReview() >> ASSESSMENT_REVIEW_2
         institution.getAssessments() >> [otherAssessment]
         institution.checkForCompletedActivity() >> true
+
+
 
         when:
         def result = new Assessment(assessmentDto, institution, volunteer)

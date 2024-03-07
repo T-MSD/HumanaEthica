@@ -12,9 +12,6 @@ public class AssessmentDto {
     private String review;
     private String reviewDate;
 
-    private Volunteer volunteer;
-
-    private InstitutionDto institution;
 
     public AssessmentDto() {
     }
@@ -24,12 +21,7 @@ public class AssessmentDto {
         setId(assessment.getId());
         setReview(assessment.getReview());
         setReviewDate(DateHandler.toISOString(assessment.getReviewDate()));
-        setVolunteer(assessment.getVolunteer());
 
-        if (deepCopyInstitution && (assessment.getInstitution() != null)) {
-            setInstitution(new InstitutionDto(assessment.getInstitution(), false, false));
-
-        }
 
     }
 
@@ -57,22 +49,6 @@ public class AssessmentDto {
         this.reviewDate = reviewDate;
     }
 
-    public Volunteer getVolunteer() {
-        return volunteer;
-    }
-
-    public void setVolunteer(Volunteer volunteer) {
-        this.volunteer = volunteer;
-    }
-
-    public InstitutionDto getInstitution() {
-        return institution;
-    }
-
-    public void setInstitution(InstitutionDto institution) {
-        this.institution = institution;
-    }
-
 
     @Override
     public String toString() {
@@ -80,8 +56,6 @@ public class AssessmentDto {
                 "id=" + id +
                 ", review='" + review + '\'' +
                 ", reviewDate=" + reviewDate +
-                ", volunteer=" + volunteer +
-                ", institution=" + institution +
                 '}';
     }
 
