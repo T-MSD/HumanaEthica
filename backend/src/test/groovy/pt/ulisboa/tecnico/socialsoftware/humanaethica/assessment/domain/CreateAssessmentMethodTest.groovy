@@ -59,13 +59,17 @@ class CreateAssessmentMethodTest extends SpockTest {
     def "review with at least 10 characters"() {
         given:
         institution.checkForCompletedActivity() >> true
-        assessmentDto.getReview() >> "1234567890"
+
+        and:
+        assessmentDto = new AssessmentDto()
+        assessmentDto.review = "123456789"
 
         when:
-        def result = new Assessment(assessmentDto, institution, volunteer)
+        new Assessment(assessmentDto, institution, volunteer)
 
-        then: "check result"
-        result.getReview().length() >= 10
+        then:
+        def error = thrown(HEException)
+        error.getErrorMessage() == ErrorMessage.ASSESSMENT_INVALID_REVIEW_LENGTH
     }
 
     @TestConfiguration
