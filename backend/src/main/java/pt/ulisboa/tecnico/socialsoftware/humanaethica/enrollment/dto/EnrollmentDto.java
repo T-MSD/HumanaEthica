@@ -9,8 +9,8 @@ public class EnrollmentDto {
     private Integer id;
     private String motivation;
     private String enrollmentDateTime;
-    private ActivityDto activity;
-    private UserDto volunteer;
+    private ActivityDto activityDto;
+    private UserDto volunteerDto;
 
     // Constructors, getters, and setters...
 
@@ -21,8 +21,8 @@ public class EnrollmentDto {
         setId(Enrollment.getId());
         setMotivation(Enrollment.getMotivation());
         setEnrollmentDateTime(DateHandler.toISOString(Enrollment.getEnrollmentDateTime()));
-        setActivity(activity);
-        setVolunteer(volunteer);
+        setActivityDto(new ActivityDto(Enrollment.getActivity(), false));
+        setVolunteerDto(new UserDto(Enrollment.getVolunteer()));
     }
 
     // Getters and setters...
@@ -51,15 +51,21 @@ public class EnrollmentDto {
         this.enrollmentDateTime = string;
     }
 
-    public ActivityDto getActivity() {
-        return activity;
+    public ActivityDto getActivityDto() {
+        return activityDto;
     }
 
-    public void setActivity(ActivityDto activity) {
-        this.activity = activity;
+    public UserDto getVolunteerDto(){
+        return volunteerDto;
+    }
+    
+
+    public void setActivityDto(ActivityDto activity) {
+        this.activityDto = activity;
     }
 
-    public void setVolunteer(UserDto volunteer) {
-        this.volunteer = volunteer;
+    public void setVolunteerDto(UserDto volunteer) {
+        this.volunteerDto = volunteer;
     }
+    
 }

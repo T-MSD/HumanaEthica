@@ -231,10 +231,11 @@ class SpockTest extends Specification {
     EnrollmentService enrollmentService
 
 
-    protected EnrollmentDto createEnrollmentDto(motivation, dateTime) {
+    protected EnrollmentDto createEnrollmentDto(motivation, dateTime, activityDto) {
         def enrollmentDto = new EnrollmentDto()
-        enrollmentDto.setMotivation(MOTIVATION_RIGHT)
+        enrollmentDto.setMotivation(motivation)
         enrollmentDto.setEnrollmentDateTime(DateHandler.toISOString(dateTime)) 
+        enrollmentDto.setActivityDto(activityDto)
         enrollmentDto
     }
 
