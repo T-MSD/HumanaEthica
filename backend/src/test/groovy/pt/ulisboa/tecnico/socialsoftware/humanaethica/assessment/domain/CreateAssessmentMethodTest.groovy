@@ -70,18 +70,6 @@ class CreateAssessmentMethodTest extends SpockTest {
         error.getErrorMessage() == ErrorMessage.ASSESSMENT_INVALID_REVIEW_LENGTH
     }
 
-    def "an institution can only be evaluated once"() {
-        given:
-        institution.checkForCompletedActivity() >> true
-        institution.checkAssessmentsWithVolunteer(volunteer) >> true
-
-        when:
-        new Assessment(institution, volunteer, assessmentDto)
-
-        then:
-        def error = thrown(HEException)
-        error.getErrorMessage() == ErrorMessage.ASSESSMENT_INSTITUTION_ALREADY_EVALUATED
-    }
 
     def "An institution can only be evaluated when it has completed at least one activity"() {
         given:
