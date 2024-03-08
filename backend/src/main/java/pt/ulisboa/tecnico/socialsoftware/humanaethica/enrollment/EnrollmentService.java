@@ -23,6 +23,7 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Volunteer;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.repository.UserRepository;
+import static pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage.*;
 
 
 @Service
@@ -43,23 +44,27 @@ public class EnrollmentService {
 
         return enrollmentRepository.getEnrollmentsByActivityId(activityId).stream()
             .map(EnrollmentDto::new)  
-            .sorted(Comparator.comparing(EnrollmentDto::getId, Comparator.naturalOrder()))
-            .toList();
+            .sorted(Comparator.comparing(EnrollmentDto::getEnrollmentDateTime)).toList();
 
-            //.sorted(Comparator.comparing(EnrollmentDto::getEnrollmentDateTime)).toList();
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public EnrollmentDto createEnrollment(Integer  userId, Integer activityId, EnrollmentDto enrollmentDto) {
-        if(activityId == null)throw new HEException(ACTIVITY_NOT_FOUND);
+    public EnrollmentDto createEnrollment(Integer userId, Integer activityId, EnrollmentDto enrollmentDto) {
+        if (activityId == null) throw new HEException(ACTIVITY_NOT_FOUND);
+        if (userId == null) throw new HEException(USER_NOT_FOUND);
+        if (enrollmentDto == null) throw new HEException(ENROLLMENT_DOES_NOT_EXIST);
 
-        if(userId == null)throw new HEException(USER_NOT_FOUND);
+        Volunteer volunteer = (Volunteer) userRepository.findById(userId)
+                .orElseThrow(() -> new HEException(ErrorMessage.USER_NOT_FOUND, userId));
+        
+        Activity activity = activityRepository.findById(activityId)
+                .orElseThrow(() -> new HEException(ErrorMessage.ACTIVITY_NOT_FOUND, enrollmentDto.getActivityDto().getId()));
 
-        if(enrollmentDto == null)throw new HEException(ENROLLMENT_DOES_NOT_EXIST);
-
-        Volunteer volunteer = (Volunteer) userRepository.findById(userId).orElseThrow(() -> new HEException(ErrorMessage.USER_NOT_FOUND, userId));
-        Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new HEException(ErrorMessage.ACTIVITY_NOT_FOUND, activityId));
-
+        // Check if enrollment already exists for the provided activity and volunteer
+        Enrollment existingEnrollment = enrollmentRepository.findByActivityAndVolunteer(activity, volunteer);
+        if (existingEnrollment != null) {
+            throw new HEException(ErrorMessage.ENROLLMENT_ALREADY_EXISTS);
+        }
 
         Enrollment enrollment = new Enrollment(activity, volunteer, enrollmentDto);
 
@@ -67,4 +72,6 @@ public class EnrollmentService {
 
         return new EnrollmentDto(enrollment);
     }
+
+
 }
