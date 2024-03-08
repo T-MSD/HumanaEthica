@@ -12,15 +12,6 @@ import java.util.List;
 @DiscriminatorValue(User.UserTypes.VOLUNTEER)
 public class Volunteer extends User {
 
-    @ManyToOne
-    private Institution institution; 
-
-    @OneToOne
-    private Activity activity;
-
-    @OneToMany(mappedBy = "volunteer")
-    private List<Enrollment> enrollments = new ArrayList<>();
-
     @OneToMany(mappedBy = "volunteer")
     private List<Participation> participationList = new ArrayList<>();
 
@@ -35,16 +26,8 @@ public class Volunteer extends User {
         super(name, Role.VOLUNTEER, state);
     }
 
-    public List<Enrollment> getEnrollments() {
-        return enrollments;
-    }
-
     public List<Participation> getParticipationList() {
         return participationList;
-    }
-
-    public void addEnrollment(Enrollment enrollment) {
-        enrollments.add(enrollment);
     }
 
     public void addParticipation(Participation participation){
