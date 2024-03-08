@@ -21,7 +21,7 @@ public class Volunteer extends User {
     private List<Participation> participationList = new ArrayList<>();
 
     @ManyToOne
-    private Institution institution; //
+    private Institution institution; 
 
     @OneToOne
     private Activity activity;
