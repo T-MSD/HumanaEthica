@@ -3,8 +3,10 @@ package pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.webservice
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.SpockTest
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.domain.Activity
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.activity.dto.ActivityDto
@@ -67,7 +69,7 @@ class GetParticipationsWebServiceIT extends SpockTest {
 
     }
 
-    def "get participations"(){
+    def "get participations"() {
         given: 'a member'
             demoMemberLogin()
 
@@ -90,6 +92,25 @@ class GetParticipationsWebServiceIT extends SpockTest {
         deleteAll()
     }
 
+    def "get participations as a non member"() {
+        given: 'a non member'
+            demoAdminLogin()
 
+        when:
+        def response = webClient.get()
+                .uri('/participations/' + activityId)
+                .headers(httpHeaders -> httpHeaders.putAll(headers))
+                .retrieve()
+                .bodyToFlux(ParticipationDto.class)
+                .collectList()
+                .block()
+
+        then: "an error is returned"
+            def error = thrown(WebClientResponseException)
+            error.statusCode == HttpStatus.FORBIDDEN
+
+        cleanup:
+        deleteAll()
+    }
 
 }
