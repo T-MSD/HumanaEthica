@@ -14,7 +14,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/institutions")
+@RequestMapping("/assessments")
 public class AssessmentController {
     @Autowired
     private AssessmentService assessmentService;
