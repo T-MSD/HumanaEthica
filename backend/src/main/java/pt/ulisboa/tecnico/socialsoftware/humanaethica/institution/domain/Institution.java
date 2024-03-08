@@ -177,9 +177,9 @@ public class Institution {
         this.assessments.add(assessment);
     }
 
-    public boolean checkAssessmentsWithVolunteer(Volunteer volunteer){
+    public boolean checkAssessmentsWithVolunteer(Volunteer volunteer, Assessment new_assessment){
         for (Assessment assessment : assessments){
-            if (assessment.getVolunteer() == volunteer){
+            if (assessment.getVolunteer() == volunteer && assessment != new_assessment){
                 return true;
             }
         }

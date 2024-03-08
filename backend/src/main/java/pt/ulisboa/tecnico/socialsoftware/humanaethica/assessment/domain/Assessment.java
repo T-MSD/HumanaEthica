@@ -107,7 +107,7 @@ public class Assessment {
     }
 
     private void institutionAlreadyEvaluated() {
-        if (this.institution.checkAssessmentsWithVolunteer(this.volunteer)){
+        if (this.institution.checkAssessmentsWithVolunteer(this.volunteer, this)){
             throw new HEException(ASSESSMENT_INSTITUTION_ALREADY_EVALUATED);
         }
     }
