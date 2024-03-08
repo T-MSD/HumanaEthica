@@ -36,8 +36,8 @@ public class AssessmentService {
     AssessmentRepository assessmentRepository;
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public List<AssessmentDto> getAssessmentsByInstitution(Integer institutionId) {
-        return assessmentRepository.findById(institutionId).stream()
+    public List<AssessmentDto> getAssessmentsByInstitution() {
+        return assessmentRepository.findAll().stream()
                 .map(assessment-> new AssessmentDto(assessment))
                 .sorted(Comparator.comparing(AssessmentDto::getReview, String.CASE_INSENSITIVE_ORDER))
                 .toList();
