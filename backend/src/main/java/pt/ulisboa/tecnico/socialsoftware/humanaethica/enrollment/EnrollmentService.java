@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.socialsoftware.humanaethica.enrollment;
 
 import static pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage.ACTIVITY_NOT_FOUND;
+import static pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage.ENROLLMENT_DOES_NOT_EXIST;
 import static pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage.USER_NOT_FOUND;
 
 import java.util.Comparator;
@@ -44,13 +45,17 @@ public class EnrollmentService {
             .map(EnrollmentDto::new)  
             .sorted(Comparator.comparing(EnrollmentDto::getId, Comparator.naturalOrder()))
             .toList();
+
+            //.sorted(Comparator.comparing(EnrollmentDto::getEnrollmentDateTime)).toList();
     }
 
-
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public EnrollmentDto createEnrollment(Integer  userId, Integer activityId, EnrollmentDto enrollmentDto) {
         if(activityId == null)throw new HEException(ACTIVITY_NOT_FOUND);
 
         if(userId == null)throw new HEException(USER_NOT_FOUND);
+
+        if(enrollmentDto == null)throw new HEException(ENROLLMENT_DOES_NOT_EXIST);
 
         Volunteer volunteer = (Volunteer) userRepository.findById(userId).orElseThrow(() -> new HEException(ErrorMessage.USER_NOT_FOUND, userId));
         Activity activity = activityRepository.findById(activityId).orElseThrow(() -> new HEException(ErrorMessage.ACTIVITY_NOT_FOUND, activityId));
