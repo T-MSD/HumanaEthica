@@ -18,15 +18,12 @@ import spock.lang.Unroll
 
 @DataJpaTest
 class CreateEnrollmentServiceTest extends SpockTest {
-    
 
     def institution
     def theme
     def volunteer
     def activity
     def enrollmentRepository
-
-    
 
     def setup() {
         volunteer = authUserService.loginDemoVolunteerAuth().getUser()
