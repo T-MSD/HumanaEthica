@@ -66,7 +66,6 @@ class CreateEnrollmentServiceTest extends SpockTest {
         storedEnrollment.enrollmentDateTime == NOW
         storedEnrollment.activity.id == activity.getId()
         storedEnrollment.volunteer.id == volunteer.getId()
-
     }
 
 
