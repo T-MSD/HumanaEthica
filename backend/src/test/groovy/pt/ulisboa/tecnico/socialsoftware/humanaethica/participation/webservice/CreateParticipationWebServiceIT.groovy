@@ -87,4 +87,25 @@ class CreateParticipationWebServiceIT extends SpockTest {
         cleanup:
         deleteAll()
     }
+
+    def "create participation as a non member"(){
+        given: 'a non member'
+            demoAdminLogin()
+
+        when:
+            def response = webClient.post()
+                    .uri('/participations/' + activityId + '/create')
+                    .headers(httpHeaders -> httpHeaders.putAll(headers))
+                    .bodyValue(participationDto)
+                    .retrieve()
+                    .bodyToMono(ParticipationDto.class)
+                    .block()
+
+        then: "an error is returned"
+            def error = thrown(WebClientResponseException)
+            error.statusCode == HttpStatus.FORBIDDEN
+
+        cleanup:
+        deleteAll()
+    }
 }
