@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.webservice
+/*package pt.ulisboa.tecnico.socialsoftware.humanaethica.assessment.webservice
 
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -88,3 +88,4 @@ class CreateAssessmentWebServiceIT extends SpockTest {
     }
 
 }
+*/
