@@ -14,7 +14,7 @@ import java.util.List;
 public class Volunteer extends User {
 
     @ManyToOne
-    private Institution institution; //
+    private Institution institution; 
 
     @OneToOne
     private Activity activity;
