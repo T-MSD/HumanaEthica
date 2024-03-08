@@ -26,6 +26,7 @@ public enum ErrorMessage {
     THEME_ALREADY_EXISTS("This theme already exists"),
     THEME_CAN_NOT_BE_DELETED("Theme %s can not be deleted because has associated Institutions"),
     THEME_NOT_APPROVED("Theme %s is not yet approved"),
+    USER_ID_NULL("User Id cannot be null"),
 
     // Activity
     ACTIVITY_NOT_FOUND("Activity not found with id %d"),
@@ -46,7 +47,9 @@ public enum ErrorMessage {
     PARTICIPATION_ACTIVITY_FULL("Activity is already full"),
     PARTICIPATION_ACTIVITY_OVERFLOW("Activity has more participants than allowed"),
     PARTICIPATION_ACTIVITY_ONGOING("Activity application deadline hasn't passed"),
-    PARTICIPATION_VOLUNTEER_ALREADY_SET("Volunteer is already participating in the activity");
+    PARTICIPATION_VOLUNTEER_ALREADY_SET("Volunteer is already participating in the activity"),
+    PARTICIPATION_DTO_NULL("ParticipationDto cannot be null"),
+    VOLUNTEER_NULL("Volunteer cannot be null");
 
     public final String label;
 

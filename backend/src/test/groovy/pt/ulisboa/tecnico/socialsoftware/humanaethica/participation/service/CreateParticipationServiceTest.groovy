@@ -13,6 +13,9 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.dto.Particip
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.auth.domain.AuthNormalUser
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.auth.domain.AuthUser
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.User
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.ErrorMessage
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException
+
 
 @DataJpaTest
 class CreateParticipationServiceTest extends SpockTest {
@@ -57,6 +60,42 @@ class CreateParticipationServiceTest extends SpockTest {
         activityRepository.findAll().size() == 1
         result.getVolunteer().getId() == volunteer.getId()
         result.getRating() == RATING_1
+    }
+
+
+    def "create participation with invalid activity ID"() {
+        when:
+        def result = participationService.createParticipation(activityId+1, participationDto)
+        then:
+        def error = thrown(HEException)
+        error.getErrorMessage() == ErrorMessage.ACTIVITY_NOT_FOUND
+    }
+
+    def "create participation with null activity ID"() {
+        when:
+        def result = participationService.createParticipation(null, participationDto)
+        then:
+        def error = thrown(HEException)
+        error.getErrorMessage() == ErrorMessage.ACTIVITY_ID_NULL
+    }
+
+
+    def "create participation with null volunteer ID"() {
+        when:
+        def participationDto2 = new ParticipationDto()
+        participationDto2.setRating(RATING_1)
+        def result = participationService.createParticipation(activityId, participationDto2)
+        then:
+        def error = thrown(HEException)
+        error.getErrorMessage() == ErrorMessage.VOLUNTEER_NULL
+    }
+
+    def "create participation with null participationDTO"() {
+        when:
+        def result = participationService.createParticipation(activityId, null)
+        then:
+        def error = thrown(HEException)
+        error.getErrorMessage() == ErrorMessage.PARTICIPATION_DTO_NULL
     }
 
     @TestConfiguration
