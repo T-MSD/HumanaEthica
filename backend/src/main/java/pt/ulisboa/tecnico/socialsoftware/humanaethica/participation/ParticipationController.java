@@ -26,7 +26,7 @@ public class ParticipationController {
         return participationService.getParticipationsByActivity(activityId);
     }
 
-    @PostMapping()
+    @PostMapping("/{activityId}/create")
     @PreAuthorize("(hasRole('ROLE_MEMBER'))")
     public ParticipationDto createParticipation(@PathVariable Integer activityId, 
     @Valid @RequestBody ParticipationDto participationDto){
