@@ -21,7 +21,7 @@ public class Volunteer extends User {
     private List<Participation> participationList = new ArrayList<>();
 
     @ManyToOne
-    private Institution institution; 
+    private Institution institution;
 
     @OneToOne
     private Activity activity;
@@ -33,6 +33,20 @@ public class Volunteer extends User {
     private List<Assessment> assessments = new ArrayList<>();
 
 
+
+    @ManyToOne
+    private Institution institution;
+
+    @OneToOne
+    private Activity activity;
+
+    @OneToMany(mappedBy = "volunteer")
+    private List<Enrollment> enrollments = new ArrayList<>();
+
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
+    }
+
     public Volunteer() {
     }
 
@@ -43,7 +57,7 @@ public class Volunteer extends User {
     public Volunteer(String name, State state) {
         super(name, Role.VOLUNTEER, state);
     }
-    
+
     public List<Participation> getParticipationList() {
         return participationList;
     }
