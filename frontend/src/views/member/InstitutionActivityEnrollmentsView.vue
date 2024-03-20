@@ -28,6 +28,19 @@
           >
         </v-card-title>
       </template>
+      <template v-slot:[`item.action`]="{ item }">
+        <v-tooltip v-if="!item.participating && activity.participantsNumberLimit > activity.numberOfParticipations" bottom>
+          <template v-slot:activator="{ on }">
+            <v-icon
+                class="mr-2 action-button"
+                @click="createParticipationDialog(item)"
+                v-on="on"
+                data-cy="createButton"
+            >select</v-icon>
+          </template>
+          <span>Select Participant</span>
+        </v-tooltip>
+      </template>
     </v-data-table>
   </v-card>
 </template>
@@ -37,12 +50,16 @@ import { Component, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import Activity from '@/models/activity/Activity';
 import Enrollment from '@/models/enrollment/Enrollment';
+import Participation from '@/models/participation/Participation';
 
 @Component({})
 export default class InstitutionActivityEnrollmentsView extends Vue {
   activity!: Activity;
   enrollments: Enrollment[] = [];
   search: string = '';
+  participation: Participation = new Participation();
+  currentEnrollment: Enrollment | null = null;
+  ParticipationDialog: boolean = false;
 
   headers: object = [
     {
@@ -90,6 +107,22 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
   async getActivities() {
     await this.$store.dispatch('setActivity', null);
     this.$router.push({ name: 'institution-activities' }).catch(() => {});
+  }
+
+  async createParticipation(enrollment: Enrollment) {
+    try {
+      const result = await RemoteServices.registerParticipation(
+          this.$store.getters.getUser.id,
+          this.participation,
+      );
+    } catch (error) {
+      await this.$store.dispatch('error', error);
+    }
+  }
+
+  createParticipationDialog(enrollment: Enrollment) {
+    this.currentEnrollment = enrollment;
+    this.ParticipationDialog = true;
   }
 }
 </script>
