@@ -1,6 +1,7 @@
 import { ISOtoString } from '@/services/ConvertDateService';
 import Theme from '@/models/theme/Theme';
 import Institution from '@/models/institution/Institution';
+import Enrollment from '@/models/enrollment/Enrollment';
 
 export default class Activity {
   id: number | null = null;

@@ -468,7 +468,7 @@ export default class RemoteServices {
       });
   }
 
-
+//ACABAR E CORRIGIR
   static async applyForActivity(userId: number, activityId: number): Promise<void> {
     httpClient
       .put(`/activities/${activityId}/report`)
@@ -487,6 +487,19 @@ export default class RemoteServices {
   static async getActivityEnrollments(activityId: number) {
     return httpClient
       .get(`/activities/${activityId}/enrollments`)
+      .then((response) => {
+        return response.data.map((enrollment: any) => {
+          return new Enrollment(enrollment);
+        });
+      })
+      .catch(async (error) => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+  static async getVolunteerEnrollments(): Promise<Enrollment[]> {
+    return httpClient
+      .get('/enrollments/volunteer')
       .then((response) => {
         return response.data.map((enrollment: any) => {
           return new Enrollment(enrollment);

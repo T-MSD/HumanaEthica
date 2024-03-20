@@ -40,7 +40,7 @@
             </template>
             <span>Report Activity</span>
           </v-tooltip>
-          <v-tooltip v-if="item.state === 'APPROVED'" bottom>
+          <v-tooltip v-if="item.state === 'APPROVED' && shouldShowApplyButton(item)" bottom>
             <template v-slot:activator="{ on }">
               <!-- New column for Apply for activity button -->
               <v-icon
@@ -64,6 +64,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import Activity from '@/models/activity/Activity';
+import Enrollment from '@/models/enrollment/Enrollment';
 import { show } from 'cli-cursor';
 
 @Component({
@@ -71,6 +72,7 @@ import { show } from 'cli-cursor';
 })
 export default class VolunteerActivitiesView extends Vue {
   activities: Activity[] = [];
+  enrollments: Enrollment[] = [];
   search: string = '';
   headers: object = [
     {
@@ -140,6 +142,7 @@ export default class VolunteerActivitiesView extends Vue {
     await this.$store.dispatch('loading');
     try {
       this.activities = await RemoteServices.getActivities();
+      this.enrollments = await  RemoteServices.getVolunteerEnrollments();
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
@@ -159,6 +162,36 @@ export default class VolunteerActivitiesView extends Vue {
         await this.$store.dispatch('error', error);
       }
     }
+  }
+
+  async activityEnrollments(activity: Activity) {
+    if (activity.id !== null) {
+      try {
+        const result = await RemoteServices.getActivityEnrollments(activity.id);
+        this.activities = this.activities.filter((a) => a.id !== activity.id);
+        this.activities.unshift(result);
+        return result;
+      } catch (error) {
+        await this.$store.dispatch('error', error);
+      }
+    }
+  }
+  shouldShowApplyButton(activity: Activity) {
+    // Verifique se o período de candidatura ainda está aberto
+    const applicationDeadline = new Date(activity.formattedApplicationDeadline);
+    const currentDate = new Date();
+    const isApplicationOpen = currentDate <= applicationDeadline; //tinha so < mas deve ser igual tmb - testar como ta agr
+
+    // Check if the current user ID is present
+    const userId = this.$store.getters.getUser.id;
+
+    // Check if the current user has already applied to the activity
+    const volunteerHasAlreadyEnrolled = this.enrollments.some((enrollment) =>
+      enrollment.activityId === activity.id);
+
+    // O botão deve ser mostrado apenas se o período de candidatura estiver aberto
+    // e o voluntário ainda não se candidatou
+    return isApplicationOpen && !volunteerHasAlreadyEnrolled;
   }
 
   async applyForActivity(activity: Activity) {
