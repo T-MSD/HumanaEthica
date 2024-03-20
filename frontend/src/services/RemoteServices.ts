@@ -653,6 +653,19 @@ export default class RemoteServices {
       });
   }
 
+  // Participation Controller
+
+  static async registerParticipation(activityId: number, participation: Participation) {
+    return httpClient
+        .post('/activities/{activityId}/participations', participation)
+        .then((response) => {
+          return new Participation(response.data);
+        })
+        .catch(async (error) => {
+          throw Error(await this.errorMessage(error));
+        });
+  }
+
   // Error
 
   static async errorMessage(error: any): Promise<string> {
