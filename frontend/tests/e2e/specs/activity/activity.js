@@ -109,7 +109,7 @@ describe('Activity', () => {
       .should('have.length', 1)
       .eq(0)
       .children()
-      .should('have.length', 15)
+      .should('have.length', 14)
     cy.get('[data-cy="adminActivitiesTable"] tbody tr')
       .eq(0).children().eq(1).should('contain', NAME)
     cy.get('[data-cy="adminActivitiesTable"] tbody tr')
