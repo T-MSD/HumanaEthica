@@ -468,6 +468,20 @@ export default class RemoteServices {
       });
   }
 
+
+  static async applyForActivity(userId: number, activityId: number): Promise<void> {
+    httpClient
+      .put(`/activities/${activityId}/report`)
+      .then((response) => {
+        return new Activity(response.data);
+      })
+      .catch(async (error) => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
+
+
   // Enrollment controller
 
   static async getActivityEnrollments(activityId: number) {

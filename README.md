@@ -19,7 +19,7 @@
   * [Java 17](https://openjdk.org/projects/jdk/17/)
   * [Maven](https://maven.apache.org/download.cgi)
   * [Node 16.14](https://nodejs.org/en/) ([Node Version Manager](https://github.com/nvm-sh/nvm) recommended)
-  * [Docker](https://www.docker.com/)
+  * [Docker](https://www.docker.com/)sudo -u postgres dropdb hedb
 * No download required
   * [Spring-boot](https://spring.io/)
   * [Vue.js](https://vuejs.org/)

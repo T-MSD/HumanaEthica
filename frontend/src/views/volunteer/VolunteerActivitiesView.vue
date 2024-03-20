@@ -40,6 +40,20 @@
             </template>
             <span>Report Activity</span>
           </v-tooltip>
+          <v-tooltip v-if="item.state === 'APPROVED'" bottom>
+            <template v-slot:activator="{ on }">
+              <!-- New column for Apply for activity button -->
+              <v-icon
+                class="mr-2 action-button"
+                color="blue"
+                v-on="on"
+                data-cy="applyButton"
+                @click="applyForActivity(item)"
+              >fas fa-sign-in-alt</v-icon
+              >
+            </template>
+            <span>Apply for Activity</span>
+          </v-tooltip>
         </template>
       </v-data-table>
     </v-card>
@@ -142,6 +156,20 @@ export default class VolunteerActivitiesView extends Vue {
         this.activities = this.activities.filter((a) => a.id !== activity.id);
         this.activities.unshift(result);
       } catch (error) {
+        await this.$store.dispatch('error', error);
+      }
+    }
+  }
+
+  async applyForActivity(activity: Activity) {
+    if (activity.id !== null) {
+      try {
+        const result = await RemoteServices.applyForActivity(
+          this.$store.getters.getUser.id,
+          activity.id,
+        );
+      } catch (error) {
+        // Handle errors, such as displaying an error message to the user
         await this.$store.dispatch('error', error);
       }
     }
