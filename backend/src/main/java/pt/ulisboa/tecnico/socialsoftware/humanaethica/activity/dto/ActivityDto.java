@@ -21,6 +21,8 @@ public class ActivityDto {
     private List<ThemeDto> themes;
     private InstitutionDto institution;
 
+    private Integer numberOfParticipations;
+
     public ActivityDto(){
     }
 
@@ -45,6 +47,8 @@ public class ActivityDto {
                 setInstitution(new InstitutionDto(activity.getInstitution(), false, false));
 
         }
+
+        setnumberOfParticipations(activity.getNumberOfParticipatingVolunteers());
     }
 
     public void setThemes(List<ThemeDto> themes) {
@@ -139,6 +143,14 @@ public class ActivityDto {
 
     public void setParticipantsNumberLimit(Integer participantsNumberLimit) {
         this.participantsNumberLimit = participantsNumberLimit;
+    }
+
+    public Integer getnumberOfParticipations() {
+        return this.numberOfParticipations;
+    }
+
+    public void setnumberOfParticipations(final Integer numberOfParticipations) {
+        this.numberOfParticipations = numberOfParticipations;
     }
 
     @Override
