@@ -15,7 +15,6 @@ import Enrollment from '@/models/enrollment/Enrollment';
 import Assessment from '@/models/assessment/Assessment';
 import Volunteer from '@/models/volunteer/Volunteer';
 
-
 const httpClient = axios.create();
 httpClient.defaults.timeout = 100000;
 httpClient.defaults.baseURL =
@@ -502,6 +501,19 @@ export default class RemoteServices {
       });
   }
 
+  static async createAssessment(
+    institutionId: number | null,
+  ): Promise<Assessment> {
+    return httpClient
+      .post(`/institutions/${institutionId}/assessments`)
+      .then((response) => {
+        return new Assessment(response.data);
+      })
+      .catch(async (error) => {
+        throw new Error(await this.errorMessage(error));
+      });
+  }
+
   // Theme Controller
 
   static async getThemes(): Promise<Theme[]> {
@@ -576,15 +588,15 @@ export default class RemoteServices {
   }
   static async getVolunteerParticipations(): Promise<Volunteer[]> {
     return httpClient
-        .get(`/users/getVolunteerParticipations`)
-        .then((response) => {
-          return response.data.map((volunteer: any) => {
-            return new Volunteer(volunteer);
-          });
-        })
-        .catch(async (error) => {
-          throw Error(await this.errorMessage(error));
+      .get('/users/getVolunteerParticipations')
+      .then((response) => {
+        return response.data.map((volunteer: any) => {
+          return new Volunteer(volunteer);
         });
+      })
+      .catch(async (error) => {
+        throw Error(await this.errorMessage(error));
+      });
   }
 
   // Error

@@ -40,6 +40,19 @@
             </template>
             <span>Report Activity</span>
           </v-tooltip>
+          <v-tooltip v-if="item.state === 'APPROVED'" bottom>
+            <template v-slot:activator="{ on }">
+              <v-icon
+                class="mr-2 action-button"
+                color="green"
+                v-on="on"
+                data-cy="writeAssessmentButton"
+                @click="createAssessment(item)"
+                >mdi-pencil</v-icon
+              >
+            </template>
+            <span>Write Assessment</span>
+          </v-tooltip>
         </template>
       </v-data-table>
     </v-card>
@@ -141,6 +154,16 @@ export default class VolunteerActivitiesView extends Vue {
         );
         this.activities = this.activities.filter((a) => a.id !== activity.id);
         this.activities.unshift(result);
+      } catch (error) {
+        await this.$store.dispatch('error', error);
+      }
+    }
+  }
+
+  async createAssessment(activity: Activity) {
+    if (activity.id !== null) {
+      try {
+        await RemoteServices.createAssessment(activity.institution.id);
       } catch (error) {
         await this.$store.dispatch('error', error);
       }
