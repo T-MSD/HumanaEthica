@@ -20,6 +20,7 @@ import pt.ulisboa.tecnico.socialsoftware.humanaethica.exceptions.HEException;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.institution.domain.Institution;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.institution.dto.InstitutionDto;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.institution.repository.InstitutionRepository;
+import pt.ulisboa.tecnico.socialsoftware.humanaethica.participation.dto.ParticipationDto;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.theme.domain.Theme;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Admin;
 import pt.ulisboa.tecnico.socialsoftware.humanaethica.user.domain.Member;
@@ -206,4 +207,14 @@ public class UserService {
         return new InstitutionDto(member.getInstitution(), true, true);
     }
 
+
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public List<ParticipationDto> getVolunteerParticipations(Integer userId) {
+        AuthUser authUser = authUserRepository.findById(userId).orElseThrow(() -> new HEException(ErrorMessage.AUTHUSER_NOT_FOUND));
+        Volunteer volunteer = (Volunteer) authUser.getUser();
+
+        return volunteer.getParticipations().stream()
+                .map(ParticipationDto::new)
+                .collect(Collectors.toList());
+    }
 }
