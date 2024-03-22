@@ -54,6 +54,19 @@
             </template>
             <span>Apply for Activity</span>
           </v-tooltip>
+          <v-tooltip v-if="item.state === 'APPROVED'" bottom>
+            <template v-slot:activator="{ on }">
+              <v-icon
+                class="mr-2 action-button"
+                color="green"
+                v-on="on"
+                data-cy="writeAssessmentButton"
+                @click="createAssessment(item)"
+                >mdi-pencil</v-icon
+              >
+            </template>
+            <span>Write Assessment</span>
+          </v-tooltip>
         </template>
       </v-data-table>
       <enrollment-dialog
@@ -216,9 +229,19 @@ export default class VolunteerActivitiesView extends Vue {
   checkSuccessfulEnrollment(activity: Activity) {
     // Check if the current user has already applied to the activity
     const volunteerHasAlreadyEnrolled = this.enrollments.some((enrollment) =>
-      enrollment.activityId === activity.id);
+        enrollment.activityId === activity.id);
 
     return volunteerHasAlreadyEnrolled;
+  }
+
+  async createAssessment(activity: Activity) {
+    if (activity.id !== null) {
+      try {
+        await RemoteServices.createAssessment(activity.institution.id);
+      } catch (error) {
+        await this.$store.dispatch('error', error);
+      }
+    }
   }
 }
 </script>
