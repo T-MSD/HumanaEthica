@@ -47,8 +47,8 @@
                 class="mr-2 action-button"
                 color="blue"
                 v-on="on"
-                data-cy="applyButton"
-                @click="applyForActivity(item)"
+                data-cy="newEnrollment"
+                @click="newEnrollment"
               >fas fa-sign-in-alt</v-icon
               >
             </template>
@@ -57,6 +57,12 @@
         </template>
       </v-data-table>
     </v-card>
+    <enrollment-dialog
+      :dialog="editEnrollmentDialog"
+      :activity="currentActivity"
+      @close="editEnrollmentDialog = false"
+      @apply="applyForActivity"
+    />
   </div>
 </template>
 
@@ -66,14 +72,25 @@ import RemoteServices from '@/services/RemoteServices';
 import Activity from '@/models/activity/Activity';
 import Enrollment from '@/models/enrollment/Enrollment';
 import { show } from 'cli-cursor';
+import EnrollmentDialog from '@/views/member/EnrollmentDialog.vue';
 
 @Component({
+  components: {'enrollment-dialog': EnrollmentDialog },
+  data() {
+    return {
+      showEnrollmentDialog: false,
+      selectedActivity: null
+    };
+  },
   methods: { show },
 })
 export default class VolunteerActivitiesView extends Vue {
   activities: Activity[] = [];
   enrollments: Enrollment[] = [];
   search: string = '';
+  currentEnrollment: Enrollment | null = null;
+  editEnrollmentDialog: boolean = false;
+  currentActivity: Activity | null = null;
   headers: object = [
     {
       text: 'Name',
@@ -149,6 +166,11 @@ export default class VolunteerActivitiesView extends Vue {
     await this.$store.dispatch('clearLoading');
   }
 
+  newEnrollment() {
+    this.currentEnrollment = new Enrollment();
+    this.editEnrollmentDialog = true;
+  }
+
   async reportActivity(activity: Activity) {
     if (activity.id !== null) {
       try {
@@ -194,19 +216,36 @@ export default class VolunteerActivitiesView extends Vue {
     return isApplicationOpen && !volunteerHasAlreadyEnrolled;
   }
 
-  async applyForActivity(activity: Activity) {
-    if (activity.id !== null) {
-      try {
-        const result = await RemoteServices.applyForActivity(
-          this.$store.getters.getUser.id,
-          activity.id,
-        );
-      } catch (error) {
-        // Handle errors, such as displaying an error message to the user
-        await this.$store.dispatch('error', error);
-      }
+  // Method to create a new enrollment
+  async createEnrollment(enrollmentData: { motivation: string }) {
+    try {
+      // Perform any necessary validation of enrollmentData
+      // Create the enrollment using RemoteServices
+      //await RemoteServices.createEnrollment(enrollmentData.motivation);
+
+      // Close the enrollment dialog after successful creation
+      this.editEnrollmentDialog = false;
+
+      // Optionally, refresh the list of enrollments or activities
+      // to reflect the changes
+    } catch (error) {
+      // Handle errors, such as displaying an error message to the user
     }
   }
+
+  async applyForActivity () {
+    return;
+  }
+  /*
+  async applyForActivity(activity: Activity, ) {
+    try {
+      // Call your RemoteServices method to apply for the activity
+      await RemoteServices.applyForActivity(activityId, motivation);
+      // Optionally, you can refresh the activities or perform any necessary updates
+    } catch (error) {
+      // Handle errors
+    }
+  }*/
 }
 </script>
 
