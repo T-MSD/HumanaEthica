@@ -503,9 +503,10 @@ export default class RemoteServices {
 
   static async createAssessment(
     institutionId: number | null,
+    assessment: Assessment,
   ): Promise<Assessment> {
     return httpClient
-      .post(`/institutions/${institutionId}/assessments`)
+      .post(`/institutions/${institutionId}/assessments`, assessment)
       .then((response) => {
         return new Assessment(response.data);
       })

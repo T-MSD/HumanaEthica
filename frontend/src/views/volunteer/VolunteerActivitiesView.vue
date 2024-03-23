@@ -55,6 +55,14 @@
           </v-tooltip>
         </template>
       </v-data-table>
+      <assessment-dialog
+        v-if="currentAssessment && editAssessmentDialog"
+        v-model="editAssessmentDialog"
+        :assessment="currentAssessment"
+        :institution="institution"
+        v-on:save-assessment="onSaveAssessment"
+        v-on:close-assessment-dialog="onCloseAssessmentDialog"
+      />
     </v-card>
   </div>
 </template>
@@ -63,13 +71,22 @@
 import { Component, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import Activity from '@/models/activity/Activity';
+import AssessmentDialog from './AssessmentDialog.vue';
 import { show } from 'cli-cursor';
+import Assessment from '@/models/assessment/Assessment';
+import Institution from '@/models/institution/Institution';
 
 @Component({
   methods: { show },
+  components: {
+    'assessment-dialog': AssessmentDialog,
+  },
 })
 export default class VolunteerActivitiesView extends Vue {
+  institution: Institution = new Institution();
   activities: Activity[] = [];
+  currentAssessment: Assessment | null = null;
+  editAssessmentDialog: boolean = false;
   search: string = '';
   headers: object = [
     {
@@ -160,7 +177,7 @@ export default class VolunteerActivitiesView extends Vue {
     }
   }
 
-  async createAssessment(activity: Activity) {
+  /*async createAssessment(activity: Activity) {
     if (activity.id !== null) {
       try {
         await RemoteServices.createAssessment(activity.institution.id);
@@ -168,6 +185,20 @@ export default class VolunteerActivitiesView extends Vue {
         await this.$store.dispatch('error', error);
       }
     }
+  }*/
+
+  createAssessment(assessment: Assessment) {
+    this.currentAssessment = assessment;
+    this.editAssessmentDialog = true;
+  }
+  async onSaveAssessment() {
+    this.editAssessmentDialog = false;
+    this.currentAssessment = null;
+  }
+
+  onCloseAssessmentDialog() {
+    this.currentAssessment = null;
+    this.editAssessmentDialog = false;
   }
 }
 </script>
