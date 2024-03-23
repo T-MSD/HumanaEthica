@@ -216,36 +216,39 @@ export default class VolunteerActivitiesView extends Vue {
     return isApplicationOpen && !volunteerHasAlreadyEnrolled;
   }
 
-  // Method to create a new enrollment
-  async createEnrollment(enrollmentData: { motivation: string }) {
-    try {
-      // Perform any necessary validation of enrollmentData
-      // Create the enrollment using RemoteServices
-      //await RemoteServices.createEnrollment(enrollmentData.motivation);
-
-      // Close the enrollment dialog after successful creation
-      this.editEnrollmentDialog = false;
-
-      // Optionally, refresh the list of enrollments or activities
-      // to reflect the changes
-    } catch (error) {
-      // Handle errors, such as displaying an error message to the user
-    }
-  }
-
+  /*
   async applyForActivity () {
     return;
   }
-  /*
-  async applyForActivity(activity: Activity, ) {
+  */
+  async applyForActivity(activity: Activity) {
     try {
+      this.currentActivity = activity;
       // Call your RemoteServices method to apply for the activity
-      await RemoteServices.applyForActivity(activityId, motivation);
+      await RemoteServices.createEnrollment(this.currentActivity.id);
       // Optionally, you can refresh the activities or perform any necessary updates
+      // Check if the enrollment was successful
+      const successfulEnrollment = this.checkSuccessfulEnrollment(this.currentActivity);
+
+      // If the enrollment was successful, close the dialog
+      if (successfulEnrollment) {
+        this.editEnrollmentDialog = false;
+      }
     } catch (error) {
       // Handle errors
     }
-  }*/
+  }
+
+  checkSuccessfulEnrollment(activity: Activity) {
+    // Check if the current user ID is present
+    const userId = this.$store.getters.getUser.id;
+
+    // Check if the current user has already applied to the activity
+    const volunteerHasAlreadyEnrolled = this.enrollments.some((enrollment) =>
+      enrollment.activityId === activity.id);
+
+    return volunteerHasAlreadyEnrolled;
+  }
 }
 </script>
 

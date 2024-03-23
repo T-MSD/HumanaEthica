@@ -27,7 +27,6 @@
           @click="createEnrollment"
           :disabled="motivation.length < 10 || !motivation.trim()"
         >
-          Create
           Apply
         </v-btn>
       </v-card-actions>
@@ -54,6 +53,12 @@ export default {
   methods: {
     closeDialog() {
       this.$emit('close');
+    },
+    createEnrollment() {
+      // Call createEnrollment method and pass the necessary data
+      this.$emit('apply', { activityId: this.activity.id, motivation: this.motivation });
+      // Close the dialog
+      this.closeDialog();
     },
     apply() {
       if (this.isValid) {

@@ -511,7 +511,7 @@ export default class RemoteServices {
       });
   }
 
-  static async createEnrollment(activityId: number) {
+  static async createEnrollment(activityId: number | null) {
     return httpClient
       .get('/activities/{activityId}/enrollments')
       .then((response) => {
