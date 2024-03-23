@@ -77,6 +77,14 @@
         v-on:save-enrollment="onSaveEnrollment"
         v-on:close-enrollment-dialog="onCloseEnrollmentDialog"
       />
+      <assessment-dialog
+        v-if="currentAssessment && editAssessmentDialog"
+        v-model="editAssessmentDialog"
+        :assessment="currentAssessment"
+        :institution="institution"
+        v-on:save-assessment="onSaveAssessment"
+        v-on:close-assessment-dialog="onCloseAssessmentDialog"
+      />
     </v-card>
   </div>
 </template>
@@ -92,10 +100,23 @@ import EnrollmentDialog from '@/views/volunteer/EnrollmentDialog.vue';
   components: {
     'enrollment-dialog': EnrollmentDialog,
   },
+import AssessmentDialog from './AssessmentDialog.vue';
+import { show } from 'cli-cursor';
+import Assessment from '@/models/assessment/Assessment';
+import Institution from '@/models/institution/Institution';
+
+@Component({
+  methods: { show },
+  components: {
+    'assessment-dialog': AssessmentDialog,
+  },
 })
 export default class VolunteerActivitiesView extends Vue {
+  institution: Institution = new Institution();
   activities: Activity[] = [];
   enrollments: Enrollment[] = [];
+  currentAssessment: Assessment | null = null;
+  editAssessmentDialog: boolean = false;
   search: string = '';
   currentEnrollment: Enrollment | null = null;
   editEnrollmentDialog: boolean = false;
@@ -234,7 +255,7 @@ export default class VolunteerActivitiesView extends Vue {
     return volunteerHasAlreadyEnrolled;
   }
 
-  async createAssessment(activity: Activity) {
+  /*async createAssessment(activity: Activity) {
     if (activity.id !== null) {
       try {
         await RemoteServices.createAssessment(activity.institution.id);
@@ -242,6 +263,20 @@ export default class VolunteerActivitiesView extends Vue {
         await this.$store.dispatch('error', error);
       }
     }
+  }*/
+
+  createAssessment(assessment: Assessment) {
+    this.currentAssessment = assessment;
+    this.editAssessmentDialog = true;
+  }
+  async onSaveAssessment() {
+    this.editAssessmentDialog = false;
+    this.currentAssessment = null;
+  }
+
+  onCloseAssessmentDialog() {
+    this.currentAssessment = null;
+    this.editAssessmentDialog = false;
   }
 }
 </script>
