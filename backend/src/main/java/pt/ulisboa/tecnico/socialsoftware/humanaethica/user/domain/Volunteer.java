@@ -59,4 +59,8 @@ public class Volunteer extends User {
     public void addAssessment(Assessment assessment) {
         this.assessments.add(assessment);
     }
+
+    public List<Assessment> getAssessments() {
+        return assessments;
+    }
 }

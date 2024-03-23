@@ -639,6 +639,19 @@ export default class RemoteServices {
       });
   }
 
+  static async getVolunteerAssessments(): Promise<Volunteer> {
+    return httpClient
+      .get('/users/getVolunteerAssessments')
+      .then((response) => {
+        return response.data.map((volunteer: any) => {
+          return new Volunteer(volunteer);
+        });
+      })
+      .catch(async (error) => {
+        throw Error(await this.errorMessage(error));
+      });
+  }
+
   // Error
 
   static async errorMessage(error: any): Promise<string> {
