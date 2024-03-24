@@ -14,6 +14,7 @@ import Theme from '@/models/theme/Theme';
 import Enrollment from '@/models/enrollment/Enrollment';
 import Assessment from '@/models/assessment/Assessment';
 import Volunteer from '@/models/volunteer/Volunteer';
+import Participation from '@/models/participation/Participation';
 
 const httpClient = axios.create();
 httpClient.defaults.timeout = 100000;
@@ -587,12 +588,12 @@ export default class RemoteServices {
         throw Error(await this.errorMessage(error));
       });
   }
-  static async getVolunteerParticipations(): Promise<Volunteer[]> {
+  static async getVolunteerParticipations(): Promise<Participation[]> {
     return httpClient
       .get('/users/getVolunteerParticipations')
       .then((response) => {
-        return response.data.map((volunteer: any) => {
-          return new Volunteer(volunteer);
+        return response.data.map((participation: any) => {
+          return new Participation(participation);
         });
       })
       .catch(async (error) => {
@@ -600,12 +601,12 @@ export default class RemoteServices {
       });
   }
 
-  static async getVolunteerAssessments(): Promise<Volunteer> {
+  static async getVolunteerAssessments(): Promise<Assessment> {
     return httpClient
       .get('/users/getVolunteerAssessments')
       .then((response) => {
-        return response.data.map((volunteer: any) => {
-          return new Volunteer(volunteer);
+        return response.data.map((assessment: any) => {
+          return new Assessment(assessment);
         });
       })
       .catch(async (error) => {
