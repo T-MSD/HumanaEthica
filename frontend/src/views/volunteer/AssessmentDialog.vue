@@ -4,7 +4,9 @@
       <v-card-title>
         <span class="headline">
           {{
-            editAssessment && editAssessment.id === null ? 'New Assessment' : ''
+            editAssessment && editAssessment.id === null
+              ? 'New Assessment'
+              : 'New Assessment'
           }}
         </span>
       </v-card-title>
@@ -13,7 +15,7 @@
           <v-row>
             <v-col cols="12">
               <v-text-field
-                label="*Description"
+                label="*Review"
                 :rules="[(v) => !!v || 'Description is required']"
                 required
                 v-model="editAssessment.review"
