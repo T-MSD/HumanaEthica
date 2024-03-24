@@ -21,7 +21,7 @@ describe('Volunteer', () => {
         .eq(0).find('[data-cy="showEnrollments"]').click();
     cy.get('[data-cy="activityEnrollmentsTable"] tbody tr')
         .should('have.length', 2);
-    cy.get('[data-cy="memberActivitiesTable"] tbody tr')
+    cy.get('[data-cy="activityEnrollmentsTable"] tbody tr')
         .eq(0).children().eq(2).should('contain', 'false');
   });
 
