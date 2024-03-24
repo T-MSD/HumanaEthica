@@ -59,6 +59,7 @@
             v-if="
               activityHasFinished[index] &&
               volunteerHasParticipation[index] &&
+              //volunteerHasAssessment[index] &&
               item.state === 'APPROVED'
             "
             bottom
@@ -127,10 +128,13 @@ export default class VolunteerActivitiesView extends Vue {
   enrollments: Enrollment[] = [];
   volunteer: Volunteer = new Volunteer();
   participation: Participation[] = [];
+  assessmentForVolunteer: Assessment[] = [];
+  assessmentForInstitution: Assessment[] = [];
   currentAssessment: Assessment | null = null;
   editAssessmentDialog: boolean = false;
   activityHasFinished: boolean[] = [];
   volunteerHasParticipation: boolean[] = [];
+  volunteerHasAssessment: boolean[] = [];
   search: string = '';
   currentEnrollment: Enrollment | null = null;
   editEnrollmentDialog: boolean = false;
@@ -212,6 +216,11 @@ export default class VolunteerActivitiesView extends Vue {
       this.volunteerHasParticipation = this.activities.map(() => false);
       this.activities.forEach(() => {
         this.hasParticipation();
+      });
+
+      this.volunteerHasAssessment = this.activities.map(() => true);
+      this.activities.forEach((activityItem, index) => {
+        //this.hasAssessmentForInstitution(activityItem, index);
       });
     } catch (error) {
       await this.$store.dispatch('error', error);
@@ -298,6 +307,31 @@ export default class VolunteerActivitiesView extends Vue {
     await this.$store.dispatch('error', error);
   }
   */
+
+
+
+  async hasAssessmentForInstitution(activity: Activity, index: number) {
+    try {
+      this.assessmentForVolunteer =
+        await RemoteServices.getVolunteerAssessments();
+      this.assessmentForInstitution =
+        await RemoteServices.getInstitutionAssessments(activity.institution.id);
+
+      this.assessmentForVolunteer.forEach((assessmentForVolunteerItem) => {
+        this.assessmentForInstitution.forEach(
+          (assessmentForInstitutionItem) => {
+            if (
+              assessmentForVolunteerItem.id === assessmentForInstitutionItem.id
+            ) {
+              this.$set(this.volunteerHasAssessment, index, false);
+            }
+          },
+        );
+      });
+    } catch (error) {
+      await this.$store.dispatch('error', error);
+    }
+  }
 
   async hasParticipation() {
     try {
