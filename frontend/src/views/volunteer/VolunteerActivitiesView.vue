@@ -175,6 +175,7 @@ export default class VolunteerActivitiesView extends Vue {
       // If the enrollment was successful, close the dialog - MAYBE SHOW MESSAGE ON DIALOG SAYNG APPLYING UNCSUCCESSFUL?
       if (successfulEnrollment) {
         this.editEnrollmentDialog = false;
+        console.log(this.currentActivity.numberOfEnrollments);
       }
     }
   }
@@ -204,9 +205,6 @@ export default class VolunteerActivitiesView extends Vue {
     const currentDate = new Date();
     const isApplicationOpen = currentDate <= applicationDeadline; //tinha so < mas deve ser igual tmb - testar como ta agr
 
-    // Check if the current user ID is present
-    const userId = this.$store.getters.getUser.id;
-
     // Check if the current user has already applied to the activity
     const volunteerHasAlreadyEnrolled = this.enrollments.some((enrollment) =>
       enrollment.activityId === activity.id);
@@ -217,9 +215,6 @@ export default class VolunteerActivitiesView extends Vue {
   }
 
   checkSuccessfulEnrollment(activity: Activity) {
-    // Check if the current user ID is present
-    const userId = this.$store.getters.getUser.id;
-
     // Check if the current user has already applied to the activity
     const volunteerHasAlreadyEnrolled = this.enrollments.some((enrollment) =>
       enrollment.activityId === activity.id);

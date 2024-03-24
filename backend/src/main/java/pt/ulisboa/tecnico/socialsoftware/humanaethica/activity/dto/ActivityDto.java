@@ -13,7 +13,7 @@ public class ActivityDto {
     private String region;
     private Integer participantsNumberLimit;
 
-    private Integer numberOfEnrollments = 0;
+    private Integer numberOfEnrollments;
 
     private String description;
     private String startingDate;

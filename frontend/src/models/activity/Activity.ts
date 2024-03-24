@@ -19,6 +19,7 @@ export default class Activity {
   formattedEndingDate!: string;
   applicationDeadline!: string;
   formattedApplicationDeadline!: string;
+  numberOfEnrollments!: number;
 
   constructor(jsonObj?: Activity) {
     if (jsonObj) {
@@ -34,6 +35,7 @@ export default class Activity {
       this.creationDate = ISOtoString(jsonObj.creationDate);
       this.description = jsonObj.description;
       this.startingDate = jsonObj.startingDate;
+      this.numberOfEnrollments = jsonObj.numberOfEnrollments;
       if (jsonObj.startingDate)
         this.formattedStartingDate = ISOtoString(jsonObj.startingDate);
       this.endingDate = jsonObj.endingDate;
