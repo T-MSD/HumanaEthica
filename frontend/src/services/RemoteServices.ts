@@ -601,7 +601,7 @@ export default class RemoteServices {
       });
   }
 
-  static async getVolunteerAssessments(): Promise<Assessment> {
+  static async getVolunteerAssessments(): Promise<Assessment[]> {
     return httpClient
       .get('/users/getVolunteerAssessments')
       .then((response) => {
