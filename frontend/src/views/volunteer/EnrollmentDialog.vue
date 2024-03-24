@@ -21,7 +21,7 @@
           variant="text"
           @click="$emit('close-enrollment-dialog')"
         >
-          Cancel
+          Close
         </v-btn>
         <v-btn
           color="blue-darken-1"
