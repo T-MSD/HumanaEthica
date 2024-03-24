@@ -29,7 +29,7 @@
           @click="registerEnrollment"
           :disabled="motivationLength < 10"
         >
-          Apply
+          Save
         </v-btn>
       </v-card-actions>
     </v-card>
