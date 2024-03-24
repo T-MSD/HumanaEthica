@@ -21,12 +21,12 @@
             <v-spacer />
           </v-card-title>
         </template>
-        <template v-slot:[`item.themes`]="{ item }">
+        <template v-slot:[`item.themes`]="{ item, index }">
           <v-chip v-for="theme in item.themes" v-bind:key="theme.id">
-            {{ theme.completeName }}
+            {{ theme.completeName }} - Index: {{ index }}
           </v-chip>
         </template>
-        <template v-slot:[`item.action`]="{ item }">
+        <template v-slot:[`item.action`]="{ item, index }">
           <v-tooltip v-if="item.state === 'APPROVED'" bottom>
             <template v-slot:activator="{ on }">
               <v-icon
@@ -40,7 +40,10 @@
             </template>
             <span>Report Activity</span>
           </v-tooltip>
-          <v-tooltip v-if="item.state === 'APPROVED'" bottom>
+          <v-tooltip
+            v-if="activityHasFinished[index] && item.state === 'APPROVED'"
+            bottom
+          >
             <template v-slot:activator="{ on }">
               <v-icon
                 class="mr-2 action-button"
@@ -75,6 +78,7 @@ import AssessmentDialog from './AssessmentDialog.vue';
 import { show } from 'cli-cursor';
 import Assessment from '@/models/assessment/Assessment';
 import Institution from '@/models/institution/Institution';
+import Volunteer from '@/models/volunteer/Volunteer';
 
 @Component({
   methods: { show },
@@ -85,8 +89,10 @@ import Institution from '@/models/institution/Institution';
 export default class VolunteerActivitiesView extends Vue {
   institution: Institution = new Institution();
   activities: Activity[] = [];
+  volunteer: Volunteer = new Volunteer();
   currentAssessment: Assessment | null = null;
   editAssessmentDialog: boolean = false;
+  activityHasFinished: boolean[] = [];
   search: string = '';
   headers: object = [
     {
@@ -156,6 +162,10 @@ export default class VolunteerActivitiesView extends Vue {
     await this.$store.dispatch('loading');
     try {
       this.activities = await RemoteServices.getActivities();
+      this.activityHasFinished = this.activities.map(() => false);
+      this.activities.forEach((activity, index) => {
+        this.activityFinished(activity, index);
+      });
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
@@ -186,6 +196,28 @@ export default class VolunteerActivitiesView extends Vue {
       }
     }
   }*/
+
+  /*
+  async hasAssessmentforInstitution() {
+    try {
+      this.volunteer = await RemoteServices.getVolunteerAssessments();
+    } catch (error) {}
+    await this.$store.dispatch('error', error);
+  }
+  */
+
+  async activityFinished(activity: Activity, index: number) {
+    if (activity.id !== null) {
+      try {
+        const currentDate = new Date();
+        const newEndingDate = new Date(activity.endingDate);
+
+        this.$set(this.activityHasFinished, index, newEndingDate < currentDate);
+      } catch (error) {
+        await this.$store.dispatch('error', error);
+      }
+    }
+  }
 
   createAssessment(assessment: Assessment) {
     this.currentAssessment = assessment;
