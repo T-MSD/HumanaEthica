@@ -511,13 +511,11 @@ export default class RemoteServices {
       });
   }
 
-  static async createEnrollment(activityId: number | null) {
+  static async createEnrollment(activityId: number, enrollment: Enrollment) {
     return httpClient
-      .get('/activities/{activityId}/enrollments')
+      .post(`/activities/${activityId}/enrollments`, enrollment)
       .then((response) => {
-        return response.data.map((enrollment: any) => {
-          return new Enrollment(enrollment);
-        });
+        return new Enrollment(response.data);
       })
       .catch(async (error) => {
         throw Error(await this.errorMessage(error));

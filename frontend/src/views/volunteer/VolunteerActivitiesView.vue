@@ -35,7 +35,7 @@
                 v-on="on"
                 data-cy="reportButton"
                 @click="reportActivity(item)"
-                >warning</v-icon
+              >warning</v-icon
               >
             </template>
             <span>Report Activity</span>
@@ -48,7 +48,7 @@
                 color="blue"
                 v-on="on"
                 data-cy="newEnrollment"
-                @click="newEnrollment"
+                @click="newEnrollment(item)"
               >fas fa-sign-in-alt</v-icon
               >
             </template>
@@ -56,13 +56,15 @@
           </v-tooltip>
         </template>
       </v-data-table>
+      <enrollment-dialog
+        v-if="editEnrollmentDialog"
+        v-model="editEnrollmentDialog"
+        :enrollment="currentEnrollment"
+        :activity="currentActivity"
+        v-on:save-enrollment="onSaveEnrollment"
+        v-on:close-enrollment-dialog="onCloseEnrollmentDialog"
+      />
     </v-card>
-    <enrollment-dialog
-      :dialog="editEnrollmentDialog"
-      :activity="currentActivity"
-      @close="editEnrollmentDialog = false"
-      @apply="applyForActivity"
-    />
   </div>
 </template>
 
@@ -71,18 +73,12 @@ import { Component, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import Activity from '@/models/activity/Activity';
 import Enrollment from '@/models/enrollment/Enrollment';
-import { show } from 'cli-cursor';
-import EnrollmentDialog from '@/views/member/EnrollmentDialog.vue';
+import EnrollmentDialog from '@/views/volunteer/EnrollmentDialog.vue';
 
 @Component({
-  components: {'enrollment-dialog': EnrollmentDialog },
-  data() {
-    return {
-      showEnrollmentDialog: false,
-      selectedActivity: null
-    };
+  components: {
+    'enrollment-dialog': EnrollmentDialog,
   },
-  methods: { show },
 })
 export default class VolunteerActivitiesView extends Vue {
   activities: Activity[] = [];
@@ -166,9 +162,26 @@ export default class VolunteerActivitiesView extends Vue {
     await this.$store.dispatch('clearLoading');
   }
 
-  newEnrollment() {
+  newEnrollment(activity : Activity) {
     this.currentEnrollment = new Enrollment();
+    this.currentActivity = activity;
     this.editEnrollmentDialog = true;
+  }
+
+  async onSaveEnrollment(enrollment: Enrollment) {
+    this.enrollments.unshift(enrollment);
+    if (this.currentActivity) {
+      const successfulEnrollment = this.checkSuccessfulEnrollment(this.currentActivity);
+      // If the enrollment was successful, close the dialog
+      if (successfulEnrollment) {
+        this.editEnrollmentDialog = false;
+      }
+    }
+  }
+
+  onCloseEnrollmentDialog() {
+    this.currentEnrollment = null;
+    this.editEnrollmentDialog = false;
   }
 
   async reportActivity(activity: Activity) {
@@ -180,19 +193,6 @@ export default class VolunteerActivitiesView extends Vue {
         );
         this.activities = this.activities.filter((a) => a.id !== activity.id);
         this.activities.unshift(result);
-      } catch (error) {
-        await this.$store.dispatch('error', error);
-      }
-    }
-  }
-
-  async activityEnrollments(activity: Activity) {
-    if (activity.id !== null) {
-      try {
-        const result = await RemoteServices.getActivityEnrollments(activity.id);
-        this.activities = this.activities.filter((a) => a.id !== activity.id);
-        this.activities.unshift(result);
-        return result;
       } catch (error) {
         await this.$store.dispatch('error', error);
       }
@@ -214,29 +214,6 @@ export default class VolunteerActivitiesView extends Vue {
     // O botão deve ser mostrado apenas se o período de candidatura estiver aberto
     // e o voluntário ainda não se candidatou
     return isApplicationOpen && !volunteerHasAlreadyEnrolled;
-  }
-
-  /*
-  async applyForActivity () {
-    return;
-  }
-  */
-  async applyForActivity(activity: Activity) {
-    try {
-      this.currentActivity = activity;
-      // Call your RemoteServices method to apply for the activity
-      await RemoteServices.createEnrollment(this.currentActivity.id);
-      // Optionally, you can refresh the activities or perform any necessary updates
-      // Check if the enrollment was successful
-      const successfulEnrollment = this.checkSuccessfulEnrollment(this.currentActivity);
-
-      // If the enrollment was successful, close the dialog
-      if (successfulEnrollment) {
-        this.editEnrollmentDialog = false;
-      }
-    } catch (error) {
-      // Handle errors
-    }
   }
 
   checkSuccessfulEnrollment(activity: Activity) {
