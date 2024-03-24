@@ -172,7 +172,7 @@ export default class VolunteerActivitiesView extends Vue {
     this.enrollments.unshift(enrollment);
     if (this.currentActivity) {
       const successfulEnrollment = this.checkSuccessfulEnrollment(this.currentActivity);
-      // If the enrollment was successful, close the dialog
+      // If the enrollment was successful, close the dialog - MAYBE SHOW MESSAGE ON DIALOG SAYNG APPLYING UNCSUCCESSFUL?
       if (successfulEnrollment) {
         this.editEnrollmentDialog = false;
       }
