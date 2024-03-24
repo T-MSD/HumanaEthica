@@ -9,6 +9,10 @@ const credentials = {
 const INSTITUTION_COLUMNS = "institutions (id, active, confirmation_token, creation_date, email, name, nif, token_generation_date)";
 const USER_COLUMNS = "users (user_type, id, creation_date, name, role, state, institution_id)";
 const AUTH_USERS_COLUMNS = "auth_users (auth_type, id, active, email, username, user_id)";
+const ACTIVITY_COLUMNS = "activity (id, application_deadline, creation_date, description, ending_date, name, participants_number_limit, region, starting_date, state, institution_id)";
+const ENROLLMENT_COLUMNS = "id, enrollment_date_time, motivation, activity_id, volunteer_id";
+const PARTICIPATION_COLUMNS = "id, acceptance_date, rating, activity_id, volunteer_id";
+
 
 const now = new Date();
 const tomorrow = new Date(now);
@@ -62,12 +66,91 @@ Cypress.Commands.add('createDemoEntities', () => {
   })
 });
 
+Cypress.Commands.add('createParticipations', () => {
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + INSTITUTION_COLUMNS + generateMoreInstitutionTuple(1),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + USER_COLUMNS + generateMoreUserTuple(2, "MEMBER","DEMO-MEMBER", "MEMBER", 1),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + AUTH_USERS_COLUMNS + generateAuthUserTuple(2, "DEMO", "demo-member", 2),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + USER_COLUMNS + generateEvenMoreUserTuple(3, "VOLUNTEER","DEMO-VOLUNTEER", "VOLUNTEER", "NULL"),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + AUTH_USERS_COLUMNS + generateMoreAuthUserTuple(3, "DEMO", "demo-volunteer", 3),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + USER_COLUMNS + generateEvenMoreUserTuple(4, "VOLUNTEER","DEMO-VOLUNTEER2", "VOLUNTEER", "NULL"),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + AUTH_USERS_COLUMNS + generateMoreAuthUserTuple(4, "DEMO", "demo-volunteer-2", 4),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + USER_COLUMNS + generateEvenMoreUserTuple(5, "VOLUNTEER","DEMO-VOLUNTEER3", "VOLUNTEER", "NULL"),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + AUTH_USERS_COLUMNS + generateMoreAuthUserTuple(5, "DEMO", "demo-volunteer-3", 5),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTuple(1, "Has vacancies", "A1", 2),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ACTIVITY_COLUMNS + generateActivityTuple(2, "Has no vacancies", "A2", 1),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ENROLLMENT_COLUMNS + generateEnrollmentTuple(1, "2024-02-06 18:51:37.595713", "Has vacancies and do not participate", 1, 3),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ENROLLMENT_COLUMNS + generateEnrollmentTuple(2, "2024-02-06 19:51:37.595713", "Has vacancies and participate", 1, 4),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ENROLLMENT_COLUMNS + generateEnrollmentTuple(3, "2024-02-06 18:51:37.595713", "Has no vacancies and participate", 2, 3),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + ENROLLMENT_COLUMNS + generateEnrollmentTuple(4, "2024-02-06 20:51:37.595713", "Has no vacancies and do not participate", 2, 5),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + PARTICIPATION_COLUMNS + generateParticipationTuple(5, 1, 4),
+    credentials: credentials,
+  })
+  cy.task('queryDatabase',  {
+    query: "INSERT INTO " + PARTICIPATION_COLUMNS + generateParticipationTuple(6, 2, 3),
+    credentials: credentials,
+  })
+});
+
 function generateAuthUserTuple(id, authType, username, userId) {
   return "VALUES ('"
     + authType + "', '"
     + id + "', 't', 'demo_member@mail.com','"
     + username + "', '"
     + userId + "')"
+}
+
+function generateMoreAuthUserTuple(id, authType, username, userId) {
+  return "VALUES ('"
+      + authType + "', '"
+      + id + "', 't', 'demo_volunteer@mail.com','"
+      + username + "', '"
+      + userId + "')"
 }
 
 function generateUserTuple(id, userType, name, role, institutionId) {
@@ -79,7 +162,51 @@ function generateUserTuple(id, userType, name, role, institutionId) {
     + institutionId + ")";
 }
 
+function generateMoreUserTuple(id, userType, name, role, institutionId) {
+  return "VALUES ('"
+      + userType + "', '"
+      + id + "', '2024-02-06 17:58:21.419878', '"
+      + name + "', '"
+      + role + "', 'ACTIVE', "
+      + institutionId + ")";
+}
+
+function generateEvenMoreUserTuple(id, userType, name, role, institutionId) {
+  return "VALUES ('"
+      + userType + "', '"
+      + id + "', '2024-02-06 17:58:23.732513', '"
+      + name + "', '"
+      + role + "', 'ACTIVE', "
+      + institutionId + ")";
+}
+
+function generateActivityTuple(id, description, name, participants_number_limit) {
+  return "VALUES ('"
+      + id + "', '2024-02-06 17:58:21.402146', '2024-01-06 17:58:21.402146', '"
+      + description + "', '2024-02-08 17:58:21.402146', '"
+      + name + "', '"
+      + participants_number_limit + "', 'Lisbon', '2024-02-07 17:58:21.402146', 'APPROVED', '1')";
+}
+
+function generateEnrollmentTuple(id, enrollment_date_time, motivation, activity_id, volunteer_id) {
+  return "VALUES ('"
+      + id + "', '"
+      + enrollment_date_time + "', '"
+      + motivation + "', '"
+      + activity_id + "', '"
+      + volunteer_id + "')";
+}
+
+function generateParticipationTuple(id, activity_id, volunteer_id) {
+  return "VALUES ('" + id + "', '2024-02-06 18:51:37.595713', '5', '" + activity_id + "', '" + volunteer_id + "')";
+}
+
 function generateInstitutionTuple(id) {
   return "VALUES ('"
     + id + "', 't', 'abca428c09862e89', '2022-08-06 17:58:21.402146','demo_institution@mail.com', 'DEMO INSTITUTION', '000000000', '2024-02-06 17:58:21.402134')";
+}
+
+function generateMoreInstitutionTuple(id) {
+  return "VALUES ('"
+      + id + "', 't', 'abca428c09862e89', '2024-02-06 17:58:21.402146','demo_institution@mail.com', 'DEMO INSTITUTION', '000000000', '2024-02-06 17:58:21.402134')";
 }
