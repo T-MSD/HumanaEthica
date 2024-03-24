@@ -56,7 +56,11 @@
           </v-tooltip>
           <v-tooltip v-if="item.state === 'APPROVED'" bottom>
           <v-tooltip
-            v-if="activityHasFinished[index] && item.state === 'APPROVED'"
+            v-if="
+              activityHasFinished[index] &&
+              volunteerHasParticipation[index] &&
+              item.state === 'APPROVED'
+            "
             bottom
           >
             <template v-slot:activator="{ on }">
@@ -109,6 +113,7 @@ import { show } from 'cli-cursor';
 import Assessment from '@/models/assessment/Assessment';
 import Institution from '@/models/institution/Institution';
 import Volunteer from '@/models/volunteer/Volunteer';
+import Participation from '@/models/participation/Participation';
 
 @Component({
   methods: { show },
@@ -121,9 +126,11 @@ export default class VolunteerActivitiesView extends Vue {
   activities: Activity[] = [];
   enrollments: Enrollment[] = [];
   volunteer: Volunteer = new Volunteer();
+  participation: Participation[] = [];
   currentAssessment: Assessment | null = null;
   editAssessmentDialog: boolean = false;
   activityHasFinished: boolean[] = [];
+  volunteerHasParticipation: boolean[] = [];
   search: string = '';
   currentEnrollment: Enrollment | null = null;
   editEnrollmentDialog: boolean = false;
@@ -201,6 +208,11 @@ export default class VolunteerActivitiesView extends Vue {
       this.activities.forEach((activity, index) => {
         this.activityFinished(activity, index);
       });
+
+      this.volunteerHasParticipation = this.activities.map(() => false);
+      this.activities.forEach(() => {
+        this.hasParticipation();
+      });
     } catch (error) {
       await this.$store.dispatch('error', error);
     }
@@ -266,7 +278,8 @@ export default class VolunteerActivitiesView extends Vue {
     return volunteerHasAlreadyEnrolled;
   }
 
-  /*async createAssessment(activity: Activity) {
+  /*
+  async createAssessment(activity: Activity) {
     if (activity.id !== null) {
       try {
         await RemoteServices.createAssessment(activity.institution.id);
@@ -274,7 +287,8 @@ export default class VolunteerActivitiesView extends Vue {
         await this.$store.dispatch('error', error);
       }
     }
-  }*/
+  }
+  */
 
   /*
   async hasAssessmentforInstitution() {
@@ -284,6 +298,22 @@ export default class VolunteerActivitiesView extends Vue {
     await this.$store.dispatch('error', error);
   }
   */
+
+  async hasParticipation() {
+    try {
+      this.participation = await RemoteServices.getVolunteerParticipations();
+
+      this.activities.forEach((activityItem, activityIndex) => {
+        this.participation.forEach((participationItem) => {
+          if (participationItem.activityId === activityItem.id) {
+            this.$set(this.volunteerHasParticipation, activityIndex, true);
+          }
+        });
+      });
+    } catch (error) {
+      await this.$store.dispatch('error', error);
+    }
+  }
 
   async activityFinished(activity: Activity, index: number) {
     if (activity.id !== null) {
