@@ -29,14 +29,15 @@
         </v-card-title>
       </template>
       <template v-slot:[`item.action`]="{ item }">
-        <v-tooltip v-if="!item.participating && activity.participantsNumberLimit > activity.numberOfParticipations" bottom>
+        <v-tooltip v-if="!item.participating && !isfull" bottom>
           <template v-slot:activator="{ on }">
             <v-icon
-                class="mr-2 action-button"
-                @click="createParticipationDialog(item)"
-                v-on="on"
-                data-cy="createButton"
-            >select</v-icon>
+              class="mr-2 action-button"
+              @click="createParticipationDialog(item)"
+              v-on="on"
+              data-cy="createButton"
+              >edit</v-icon
+            >
           </template>
           <span>Select Participant</span>
         </v-tooltip>
@@ -60,13 +61,26 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
   participation: Participation = new Participation();
   currentEnrollment: Enrollment | null = null;
   ParticipationDialog: boolean = false;
+  isfull: boolean = true;
 
   headers: object = [
+    {
+      text: 'Volunteer Name',
+      value: 'volunteerName',
+      align: 'left',
+      width: '5%',
+    },
     {
       text: 'Motivation',
       value: 'motivation',
       align: 'left',
       width: '50%',
+    },
+    {
+      text: 'Participatings',
+      value: 'participating',
+      align: 'left',
+      width: '5%',
     },
     {
       text: 'Application Date',
@@ -75,22 +89,16 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
       width: '5%',
     },
     {
-      text: 'Volunteer Name',
-      value: 'volunteerName',
+      text: 'Actions',
+      value: 'action',
       align: 'left',
       width: '5%',
     },
-    {
-      text: 'Participating',
-      value: 'participating',
-      align: 'left',
-      width: '5%',
-    },
-
   ];
 
   async created() {
     this.activity = this.$store.getters.getActivity;
+    this.isfull = !(this.activity.participantsNumberLimit > this.activity.numberOfParticipations);
     if (this.activity !== null && this.activity.id !== null) {
       await this.$store.dispatch('loading');
       try {
