@@ -39,7 +39,7 @@
           color="blue-darken-1"
           variant="text"
           @click="writeAssessment"
-          data-cy="save-assessment"
+          data-cy="saveAssessment"
         >
           Save
         </v-btn>
@@ -64,7 +64,7 @@ Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
 export default class AssessmentDialog extends Vue {
   @Model('dialog', Boolean) dialog!: boolean;
   @Prop({ type: Assessment, required: true }) readonly assessment!: Assessment;
-  @Prop({ type: Institution, required: true }) institution!: Institution;
+  @Prop({ type: Activity, required: true }) activity!: Activity;
   editAssessment: Assessment = new Assessment();
   async created() {
     this.editAssessment = new Assessment(this.assessment);
@@ -76,15 +76,13 @@ export default class AssessmentDialog extends Vue {
     );
   }
   async writeAssessment() {
-    if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+
+    if ((this.$refs.form as Vue & { validate: () => boolean }).validate() && this.editAssessment != null) {
       try {
-        const result = this.editAssessment.id != null;
-        await RemoteServices.createAssessment(
-          this.institution.id,
+        const result = await RemoteServices.createAssessment(
+          this.activity.institution.id,
           this.editAssessment,
         );
-
-        console.log('asdasdasdasdasdasdasdasdasdasdas' +  this.institution.id);
         this.$emit('save-assessment', result);
       } catch (error) {
         await this.$store.dispatch('error', error);

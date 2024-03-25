@@ -64,10 +64,10 @@
         </template>
       </v-data-table>
       <assessment-dialog
-        v-if="currentAssessment && editAssessmentDialog"
+        v-if="currentActivity && editAssessmentDialog"
         v-model="editAssessmentDialog"
         :assessment="currentAssessment"
-        :institution="institution"
+        :activity="currentActivity"
         v-on:save-assessment="onSaveAssessment"
         v-on:close-assessment-dialog="onCloseAssessmentDialog"
       />
@@ -104,6 +104,7 @@ export default class VolunteerActivitiesView extends Vue {
   activityHasFinished: boolean[] = [];
   volunteerHasParticipation: boolean[] = [];
   volunteerHasAssessment: boolean[] = [];
+  currentActivity: Activity | null = null;
   search: string = '';
   headers: object = [
     {
@@ -172,6 +173,7 @@ export default class VolunteerActivitiesView extends Vue {
   async created() {
     await this.$store.dispatch('loading');
     try {
+
       this.activities = await RemoteServices.getActivities();
 
       this.activityHasFinished = this.activities.map(() => false);
@@ -209,35 +211,12 @@ export default class VolunteerActivitiesView extends Vue {
     }
   }
 
-  /*
-  async createAssessment(activity: Activity) {
-    if (activity.id !== null) {
-      try {
-        await RemoteServices.createAssessment(activity.institution.id);
-      } catch (error) {
-        await this.$store.dispatch('error', error);
-      }
-    }
-  }
-  */
-
-  /*
-  async hasAssessmentforInstitution() {
-    try {
-      this.volunteer = await RemoteServices.getVolunteerAssessments();
-    } catch (error) {}
-    await this.$store.dispatch('error', error);
-  }
-  */
-
-
-
   async hasAssessmentForInstitution(activity: Activity, index: number) {
     try {
       this.assessmentForVolunteer =
-        await RemoteServices.getVolunteerAssessments();
+          await RemoteServices.getVolunteerAssessments();
       this.assessmentForInstitution =
-        await RemoteServices.getInstitutionAssessments(activity.institution.id);
+          await RemoteServices.getInstitutionAssessments(activity.institution.id);
 
       this.assessmentForVolunteer.forEach((assessmentForVolunteerItem) => {
         this.assessmentForInstitution.forEach(
@@ -284,17 +263,23 @@ export default class VolunteerActivitiesView extends Vue {
     }
   }
 
-  createAssessment(assessment: Assessment) {
-    this.currentAssessment = assessment;
+  createAssessment(activity : Activity) {
+    this.currentActivity = activity;
+    this.currentAssessment = new Assessment()
     this.editAssessmentDialog = true;
   }
-  async onSaveAssessment() {
+  async onSaveAssessment(assessment : Assessment) {
+
     this.editAssessmentDialog = false;
-    this.currentAssessment = null;
+    this.currentActivity = null;
+    console.log(this.assessmentForVolunteer)
+    this.assessmentForInstitution.unshift(assessment)
+    this.assessmentForVolunteer.unshift(assessment)
+
   }
 
   onCloseAssessmentDialog() {
-    this.currentAssessment = null;
+    this.currentActivity = null;
     this.editAssessmentDialog = false;
   }
 }
