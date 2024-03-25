@@ -10,6 +10,7 @@
             label="*Motivation"
             :rules="[(v) => !!v || 'Motivation is required']"
             v-model="newEnrollment.motivation"
+            data-cy="motivationInput"
             required
           ></v-text-field>
         </v-form>
@@ -28,6 +29,7 @@
           variant="text"
           @click="registerEnrollment"
           :disabled="motivationLength < 10"
+          data-cy="saveEnrollment"
         >
           Save
         </v-btn>
