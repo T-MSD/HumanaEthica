@@ -51,11 +51,12 @@
           >
             <template v-slot:activator="{ on }">
               <v-icon
+                v-if="volunteerHasParticipation[index]"
                 class="mr-2 action-button"
                 color="green"
                 v-on="on"
                 data-cy="writeAssessmentButton"
-                @click="createAssessment(item)"
+                @click="createAssessment(item, index)"
                 >mdi-pencil</v-icon
               >
             </template>
@@ -105,6 +106,7 @@ export default class VolunteerActivitiesView extends Vue {
   volunteerHasParticipation: boolean[] = [];
   volunteerHasAssessment: boolean[] = [];
   currentActivity: Activity | null = null;
+  currentIndex: number = 0;
   search: string = '';
   headers: object = [
     {
@@ -262,7 +264,8 @@ export default class VolunteerActivitiesView extends Vue {
     }
   }
 
-  createAssessment(activity: Activity) {
+  createAssessment(activity: Activity, index: number) {
+    this.currentIndex = index;
     this.currentActivity = activity;
     this.currentAssessment = new Assessment();
     this.editAssessmentDialog = true;
@@ -270,6 +273,7 @@ export default class VolunteerActivitiesView extends Vue {
   async onSaveAssessment(assessment: Assessment) {
     this.editAssessmentDialog = false;
     this.currentActivity = null;
+    this.volunteerHasParticipation[this.currentIndex] = false;
     this.assessmentForInstitution.unshift(assessment);
     this.assessmentForVolunteer.unshift(assessment);
   }
