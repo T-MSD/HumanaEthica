@@ -63,6 +63,8 @@ describe('Activity', () => {
     cy.get('[data-cy="memberActivitiesTable"] tbody tr')
       .eq(0).children().eq(2).should('contain', NUMBER)
     cy.get('[data-cy="memberActivitiesTable"] tbody tr')
+      .eq(0).children().eq(3).should('contain', 0)
+    cy.get('[data-cy="memberActivitiesTable"] tbody tr')
       .eq(0).children().eq(4).should('contain', DESCRIPTION);
     cy.logout();
 
