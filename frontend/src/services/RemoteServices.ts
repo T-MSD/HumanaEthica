@@ -61,7 +61,7 @@ export default class RemoteServices {
       })
       .catch(async (error) => {
         throw Error(await this.errorMessage(error));
-      });
+      }); 
   }
 
   static async demoVolunteerLogin(): Promise<TokenAuthUser> {
