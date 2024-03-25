@@ -35,10 +35,11 @@
           Close
         </v-btn>
         <v-btn
+          v-if="checkReviewLength()"
           color="blue-darken-1"
           variant="text"
           @click="writeAssessment"
-          data-cy="saveAssessment"
+          data-cy="save-assessment"
         >
           Save
         </v-btn>
@@ -54,6 +55,7 @@ import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
 import { ISOtoString } from '@/services/ConvertDateService';
 import Assessment from '@/models/assessment/Assessment';
 import Institution from '@/models/institution/Institution';
+import Activity from '@/models/activity/Activity';
 
 Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);
 @Component({
@@ -67,6 +69,12 @@ export default class AssessmentDialog extends Vue {
   async created() {
     this.editAssessment = new Assessment(this.assessment);
   }
+
+  checkReviewLength(): boolean {
+    return (
+      !!this.editAssessment.review && this.editAssessment.review.length >= 10
+    );
+  }
   async writeAssessment() {
     if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
       try {
@@ -75,6 +83,8 @@ export default class AssessmentDialog extends Vue {
           this.institution.id,
           this.editAssessment,
         );
+
+        console.log('asdasdasdasdasdasdasdasdasdasdas' +  this.institution.id);
         this.$emit('save-assessment', result);
       } catch (error) {
         await this.$store.dispatch('error', error);
