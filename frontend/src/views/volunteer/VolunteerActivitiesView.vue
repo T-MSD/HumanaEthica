@@ -59,7 +59,7 @@
             v-if="
               activityHasFinished[index] &&
               volunteerHasParticipation[index] &&
-              //volunteerHasAssessment[index] &&
+              volunteerHasAssessment[index] &&
               item.state === 'APPROVED'
             "
             bottom
@@ -207,9 +207,14 @@ export default class VolunteerActivitiesView extends Vue {
   async created() {
     await this.$store.dispatch('loading');
     try {
-
       this.activities = await RemoteServices.getActivities();
       this.enrollments = await  RemoteServices.getVolunteerEnrollments();
+
+      this.assessmentForVolunteer =
+        await RemoteServices.getVolunteerAssessments();
+
+      this.participation = await RemoteServices.getVolunteerParticipations();
+
       this.activityHasFinished = this.activities.map(() => false);
       this.activities.forEach((activity, index) => {
         this.activityFinished(activity, index);
@@ -222,7 +227,11 @@ export default class VolunteerActivitiesView extends Vue {
 
       this.volunteerHasAssessment = this.activities.map(() => true);
       this.activities.forEach((activityItem, index) => {
-        //this.hasAssessmentForInstitution(activityItem, index);
+        this.hasAssessmentForInstitution(
+          activityItem,
+          index,
+          this.assessmentForVolunteer,
+        );
       });
     } catch (error) {
       await this.$store.dispatch('error', error);
@@ -289,23 +298,16 @@ export default class VolunteerActivitiesView extends Vue {
     return volunteerHasAlreadyEnrolled;
   }
 
-  async hasAssessmentForInstitution(activity: Activity, index: number) {
+  async hasAssessmentForInstitution(
+    activity: Activity,
+    index: number,
+    assessments: Assessment[],
+  ) {
     try {
-      this.assessmentForVolunteer =
-          await RemoteServices.getVolunteerAssessments();
-      this.assessmentForInstitution =
-          await RemoteServices.getInstitutionAssessments(activity.institution.id);
-
-      this.assessmentForVolunteer.forEach((assessmentForVolunteerItem) => {
-        this.assessmentForInstitution.forEach(
-          (assessmentForInstitutionItem) => {
-            if (
-              assessmentForVolunteerItem.id === assessmentForInstitutionItem.id
-            ) {
-              this.$set(this.volunteerHasAssessment, index, false);
-            }
-          },
-        );
+      assessments.forEach((assessmentsItem) => {
+        if (assessmentsItem.institutionId == activity.institution.id) {
+          this.$set(this.volunteerHasAssessment, index, false);
+        }
       });
     } catch (error) {
       await this.$store.dispatch('error', error);
@@ -314,8 +316,6 @@ export default class VolunteerActivitiesView extends Vue {
 
   async hasParticipation() {
     try {
-      this.participation = await RemoteServices.getVolunteerParticipations();
-
       this.activities.forEach((activityItem, activityIndex) => {
         this.participation.forEach((participationItem) => {
           if (participationItem.activityId === activityItem.id) {
@@ -341,19 +341,16 @@ export default class VolunteerActivitiesView extends Vue {
     }
   }
 
-  createAssessment(activity : Activity) {
+  createAssessment(activity: Activity) {
     this.currentActivity = activity;
-    this.currentAssessment = new Assessment()
+    this.currentAssessment = new Assessment();
     this.editAssessmentDialog = true;
   }
-  async onSaveAssessment(assessment : Assessment) {
-
+  async onSaveAssessment(assessment: Assessment) {
     this.editAssessmentDialog = false;
     this.currentActivity = null;
-    console.log(this.assessmentForVolunteer)
-    this.assessmentForInstitution.unshift(assessment)
-    this.assessmentForVolunteer.unshift(assessment)
-
+    this.assessmentForInstitution.unshift(assessment);
+    this.assessmentForVolunteer.unshift(assessment);
   }
 
   onCloseAssessmentDialog() {

@@ -110,7 +110,7 @@ public class UserController {
         return userService.getVolunteerParticipations(userId);
     }
 
-    @PostMapping("/users/getVolunteerAssessments")
+    @GetMapping("/users/getVolunteerAssessments")
     @PreAuthorize("hasRole('ROLE_VOLUNTEER')")
     public List<AssessmentDto> getVolunteerAssessments(Principal principal) {
         int userId = ((AuthUser) ((Authentication) principal).getPrincipal()).getUser().getId();
