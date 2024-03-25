@@ -76,8 +76,10 @@ export default class AssessmentDialog extends Vue {
     );
   }
   async writeAssessment() {
-
-    if ((this.$refs.form as Vue & { validate: () => boolean }).validate() && this.editAssessment != null) {
+    if (
+      (this.$refs.form as Vue & { validate: () => boolean }).validate() &&
+      this.editAssessment != null
+    ) {
       try {
         const result = await RemoteServices.createAssessment(
           this.activity.institution.id,
