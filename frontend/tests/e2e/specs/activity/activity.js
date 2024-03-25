@@ -25,7 +25,7 @@ describe('Activity', () => {
     }).as('register');
     // intercept get institutions
     cy.intercept('GET', '/users/*/getInstitution').as('getInstitutions');
-    cy.intercept('GET', '/themes/availableThemes').as('availableTeams');
+    cy.intercept('GET', '/themes/availableThemes').as('availableTeams')
     // go to create activity form
     cy.get('[data-cy="institution"]').click();
 
@@ -55,7 +55,7 @@ describe('Activity', () => {
       .should('have.length', 1)
       .eq(0)
       .children()
-      .should('have.length', 11)
+      .should('have.length', 12)
     cy.get('[data-cy="memberActivitiesTable"] tbody tr')
       .eq(0).children().eq(0).should('contain', NAME)
     cy.get('[data-cy="memberActivitiesTable"] tbody tr')
