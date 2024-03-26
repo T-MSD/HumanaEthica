@@ -43,6 +43,11 @@
         </v-tooltip>
       </template>
     </v-data-table>
+    <participation-selection-dialog
+      v-if="currentEnrollment && ParticipationDialog"
+      v-model="ParticipationDialog"
+      v-on:close-participation-dialog="onCloseParticipationDialog"
+    />
   </v-card>
 </template>
 
@@ -52,8 +57,13 @@ import RemoteServices from '@/services/RemoteServices';
 import Activity from '@/models/activity/Activity';
 import Enrollment from '@/models/enrollment/Enrollment';
 import Participation from '@/models/participation/Participation';
+import ParticipationSelectionDialog from '@/views/member/ParticipationSelectionDialog.vue';
 
-@Component({})
+@Component({
+  components: {
+    'participation-selection-dialog': ParticipationSelectionDialog,
+  },
+})
 export default class InstitutionActivityEnrollmentsView extends Vue {
   activity!: Activity;
   enrollments: Enrollment[] = [];
@@ -98,7 +108,10 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
 
   async created() {
     this.activity = this.$store.getters.getActivity;
-    this.isfull = !(this.activity.participantsNumberLimit > this.activity.numberOfParticipations);
+    this.isfull = !(
+      this.activity.participantsNumberLimit >
+      this.activity.numberOfParticipations
+    );
     if (this.activity !== null && this.activity.id !== null) {
       await this.$store.dispatch('loading');
       try {
@@ -120,8 +133,8 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
   async createParticipation(enrollment: Enrollment) {
     try {
       const result = await RemoteServices.registerParticipation(
-          this.$store.getters.getUser.id,
-          this.participation,
+        this.$store.getters.getUser.id,
+        this.participation,
       );
     } catch (error) {
       await this.$store.dispatch('error', error);
@@ -131,6 +144,11 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
   createParticipationDialog(enrollment: Enrollment) {
     this.currentEnrollment = enrollment;
     this.ParticipationDialog = true;
+  }
+
+  onCloseParticipationDialog() {
+    this.currentEnrollment = null;
+    this.ParticipationDialog = false;
   }
 }
 </script>
