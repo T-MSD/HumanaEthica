@@ -146,11 +146,11 @@ Cypress.Commands.add('createInstitutions', () => {
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + PARTICIPATION_COLUMNS + generateParticipationTuple(5, 2, 3),
+    query: "INSERT INTO " + PARTICIPATION_COLUMNS + generateParticipationTuple(6, 2, 3),
     credentials: credentials,
   })
   cy.task('queryDatabase',  {
-    query: "INSERT INTO " + PARTICIPATION_COLUMNS + generateParticipationTuple(5, 6, 3),
+    query: "INSERT INTO " + PARTICIPATION_COLUMNS + generateParticipationTuple(7, 6, 3),
     credentials: credentials,
   })
 });
