@@ -110,7 +110,6 @@ Cypress.Commands.add('createDemoEntitiesTest1', () => {
 
   // Insert activity data
 Cypress.Commands.add('createInstitutions', () => {
->>>>>>> dc48c9c (feat: Created tests for volunteer #102 #103)
   cy.task('queryDatabase', {
     query: "INSERT INTO public.activity (id, application_deadline, creation_date, description, ending_date, name, participants_number_limit, region, starting_date, state, institution_id) VALUES (1, '2024-08-06 17:58:21.402146', '2024-08-06 17:58:21.402146', 'Enrollment is open', '2024-08-08 17:58:21.402146', 'A1', 1, 'Lisbon', '2024-08-07 17:58:21.402146', 'APPROVED', 1)",
     credentials: credentials,
