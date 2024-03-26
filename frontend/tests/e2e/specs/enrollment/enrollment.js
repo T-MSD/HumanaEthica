@@ -53,7 +53,7 @@ describe('Enrollment', () => {
       cy.get('[data-cy="saveEnrollment"]').click()
 
       cy.wait('@enroll');
-      
+
       cy.logout();
     });
     
