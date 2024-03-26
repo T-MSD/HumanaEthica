@@ -1,16 +1,9 @@
 describe('Enrollment', () => {
   
-  beforeEach(() => {
-    cy.deleteAllButArs();
-    cy.createDemoEntitiesTest1();
-  });
-
-  afterEach(() => {
-    cy.deleteAllButArs();
-  });
-  
   
     it('as a member, verify activity table has 3 instances and first activity has 0 applications', () => {
+      cy.deleteAllButArs();
+      cy.createDemoEntitiesTest1();
       cy.demoMemberLogin();
 
       // go to show activities form
@@ -50,35 +43,38 @@ describe('Enrollment', () => {
       // save form
       cy.get('[data-cy="saveEnrollment"]').click()
 
+      cy.logout();
     });
-
-
-
-
-
-
-    /*
+    
   
-    it('as a member, should verify the first activity has 1 application and check enrollments', () => {
+    it('as a member, verify the first activity has 1 application and check enrollments', () => {
       cy.demoMemberLogin();
-  
+      const MOTIVATION = 'Demo-Motivation';
+
+      // go to show activities form
+      cy.get('[data-cy="institution"]').click();
+      cy.get('[data-cy="activities"]').click();
+
       // Assert the first activity has 1 application
-      cy.get('[data-cy="activitiesTable"] tbody tr')
+      cy.get('[data-cy="memberActivitiesTable"] tbody tr')
+      .eq(0).children().eq(3).should('contain', 1 );
+
+      // Check enrollments
+      cy.get('[data-cy="memberActivitiesTable"] tbody tr')
+      .eq(0)
+      .find('[data-cy="showEnrollments"]')
+      .click();
+      
+      // Assert there is 1 enrollment with the correct motivation
+      cy.get('[data-cy="activityEnrollmentsTable"] tbody tr')
         .eq(0)
-        .find('[data-cy="applicationsColumn"]')
-        .should('contain', '1');
-  
-      // Show enrollments for the first activity
-      cy.get('[data-cy="showEnrollmentsButton"]').first().click();
-  
-      // Assert there is 1 enrollment with the motivation introduced
-      cy.get('[data-cy="enrollmentsTable"] tbody tr').should('have.length', 1);
-      cy.get('[data-cy="enrollmentsTable"] tbody tr')
+        .children()
         .eq(0)
-        .find('[data-cy="motivationColumn"]')
-        .should('contain', 'Your motivation');
+        .should('contain', MOTIVATION);
+
+      cy.logout();
+      cy.deleteAllButArs();
+
     });
-    */
-  
   });
   
