@@ -10,8 +10,8 @@ const INSTITUTION_COLUMNS = "institutions (id, active, confirmation_token, creat
 const USER_COLUMNS = "users (user_type, id, creation_date, name, role, state, institution_id)";
 const AUTH_USERS_COLUMNS = "auth_users (auth_type, id, active, email, username, user_id)";
 const ACTIVITY_COLUMNS = "activity (id, application_deadline, creation_date, description, ending_date, name, participants_number_limit, region, starting_date, state, institution_id)";
-const ENROLLMENT_COLUMNS = "id, enrollment_date_time, motivation, activity_id, volunteer_id";
-const PARTICIPATION_COLUMNS = "id, acceptance_date, rating, activity_id, volunteer_id";
+const ENROLLMENT_COLUMNS = "enrollment (id, enrollment_date_time, motivation, activity_id, volunteer_id)";
+const PARTICIPATION_COLUMNS = "participation (id, acceptance_date, rating, activity_id, volunteer_id)";
 
 
 const now = new Date();
@@ -28,7 +28,15 @@ Cypress.Commands.add('deleteAllButArs', () => {
   cy.task('queryDatabase', {
     query: "DELETE FROM ACTIVITY",
     credentials: credentials,
-  })
+  });
+  cy.task('queryDatabase', {
+    query: "DELETE FROM PARTICIPATION",
+    credentials: credentials,
+  });
+  cy.task('queryDatabase', {
+    query: "DELETE FROM ENROLLMENT",
+    credentials: credentials,
+  });
   cy.task('queryDatabase', {
     query: "DELETE FROM AUTH_USERS WHERE NOT (username = 'ars')",
     credentials: credentials,
@@ -66,7 +74,7 @@ Cypress.Commands.add('createDemoEntities', () => {
   })
 });
 
-Cypress.Commands.add('createDemoInstitutions', () => {
+Cypress.Commands.add('createInstitutions', () => {
   cy.task('queryDatabase', {
     query: "INSERT INTO" + INSTITUTION_COLUMNS + "VALUES ('"
         + 1 + "', 't', 'abca428c09862e89', '2024-02-06 17:58:21.402146','demo_institution@mail.com', 'DEMO INSTITUTION', '000000000', '2024-02-06 17:58:21.402134')"
