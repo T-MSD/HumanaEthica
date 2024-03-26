@@ -7,12 +7,16 @@ describe('Enrollment', () => {
       cy.demoMemberLogin();
 
       // go to show activities form
+      cy.intercept('GET', '/users/*/getInstitution').as('getInstitutions');
+
       cy.get('[data-cy="institution"]').click();
       cy.get('[data-cy="activities"]').click();
-  
+
+      cy.wait('@getInstitutions');
+
       // Assert there are 3 activities
       cy.get('[data-cy="memberActivitiesTable"] tbody tr')
-      .should('have.length', 3) 
+      .should('have.length', 3)
 
       // Assert the first activity has 0 applications
       cy.get('[data-cy="memberActivitiesTable"] tbody tr')
@@ -28,8 +32,13 @@ describe('Enrollment', () => {
       cy.demoVolunteerLogin();
       const MOTIVATION = 'Demo-Motivation';
 
+      cy.intercept('POST', '/activities/*/enrollments').as('enroll');
+      cy.intercept('GET', '/activities').as('getActivities');
+
       // go to show activities form
       cy.get('[data-cy="volunteerActivities"]').click();
+
+      cy.wait('@getActivities');
   
       // Apply for the first activity
       cy.get('[data-cy="volunteerActivitiesTable"] tbody tr')
@@ -43,6 +52,8 @@ describe('Enrollment', () => {
       // save form
       cy.get('[data-cy="saveEnrollment"]').click()
 
+      cy.wait('@enroll');
+      
       cy.logout();
     });
     
@@ -51,9 +62,14 @@ describe('Enrollment', () => {
       cy.demoMemberLogin();
       const MOTIVATION = 'Demo-Motivation';
 
+      cy.intercept('GET', '/users/*/getInstitution').as('getInstitutions');
+      cy.intercept('GET', '/activities/*/enrollments').as('getEnrollments');
+
       // go to show activities form
       cy.get('[data-cy="institution"]').click();
       cy.get('[data-cy="activities"]').click();
+
+      cy.wait('@getInstitutions');
 
       // Assert the first activity has 1 application
       cy.get('[data-cy="memberActivitiesTable"] tbody tr')
@@ -71,6 +87,8 @@ describe('Enrollment', () => {
         .children()
         .eq(0)
         .should('contain', MOTIVATION);
+
+      cy.wait('@getEnrollments');
 
       cy.logout();
       cy.deleteAllButArs();

@@ -172,7 +172,7 @@ export default class VolunteerActivitiesView extends Vue {
     this.enrollments.unshift(enrollment);
     if (this.currentActivity) {
       const successfulEnrollment = this.checkSuccessfulEnrollment(this.currentActivity);
-      // If the enrollment was successful, close the dialog - MAYBE SHOW MESSAGE ON DIALOG SAYNG APPLYING UNCSUCCESSFUL?
+      // If the enrollment was successful, close the dialog
       if (successfulEnrollment) {
         this.editEnrollmentDialog = false;
       }
@@ -202,7 +202,7 @@ export default class VolunteerActivitiesView extends Vue {
     // Verifique se o período de candidatura ainda está aberto
     const applicationDeadline = new Date(activity.formattedApplicationDeadline);
     const currentDate = new Date();
-    const isApplicationOpen = currentDate <= applicationDeadline; //tinha so < mas deve ser igual tmb - testar como ta agr
+    const isApplicationOpen = currentDate <= applicationDeadline;
 
     // Check if the current user has already applied to the activity
     const volunteerHasAlreadyEnrolled = this.enrollments.some((enrollment) =>
