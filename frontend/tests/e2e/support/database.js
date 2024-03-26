@@ -76,12 +76,12 @@ Cypress.Commands.add('createDemoEntities', () => {
 
 Cypress.Commands.add('createInstitutions', () => {
   cy.task('queryDatabase', {
-    query: "INSERT INTO" + INSTITUTION_COLUMNS + "VALUES ('"
+    query: "INSERT INTO " + INSTITUTION_COLUMNS + "VALUES ('"
         + 1 + "', 't', 'abca428c09862e89', '2024-02-06 17:58:21.402146','demo_institution@mail.com', 'DEMO INSTITUTION', '000000000', '2024-02-06 17:58:21.402134')",
     credentials: credentials
   })
   cy.task('queryDatabase', {
-    query: "INSERT INTO" + INSTITUTION_COLUMNS + "VALUES ('"
+    query: "INSERT INTO " + INSTITUTION_COLUMNS + "VALUES ('"
         + 2 + "', 't', 'abca428c09862e89', '2024-02-06 17:58:21.402146','demo_institution@mail.com', 'DEMO INSTITUTION-2', '000000002', '2024-02-06 17:58:21.402134')",
     credentials: credentials
   })
