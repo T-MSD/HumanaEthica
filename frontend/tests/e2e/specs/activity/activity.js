@@ -50,7 +50,7 @@ describe('Activity', () => {
     cy.get('[data-cy="saveActivity"]').click()
     // check request was done
     cy.wait('@register')
-    // check results
+    // check resultsdata-cy="volunteerActivitiesTable"
     cy.get('[data-cy="memberActivitiesTable"] tbody tr')
       .should('have.length', 1)
       .eq(0)
