@@ -581,7 +581,7 @@ export default class RemoteServices {
     participation: Participation,
   ) {
     return httpClient
-      .post('/activities/{activityId}/participations', participation)
+      .post(`/activities/${activityId}/participations`, participation)
       .then((response) => {
         return new Participation(response.data);
       })
