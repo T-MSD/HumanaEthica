@@ -106,16 +106,17 @@ import { Component, Vue } from 'vue-property-decorator';
 import RemoteServices from '@/services/RemoteServices';
 import Activity from '@/models/activity/Activity';
 import Enrollment from '@/models/enrollment/Enrollment';
-import EnrollmentDialog from '@/views/volunteer/EnrollmentDialog.vue';
-import AssessmentDialog from './AssessmentDialog.vue';
+import EnrollmentDialog from './EnrollmentDialog.vue';
 import { show } from 'cli-cursor';
 import Assessment from '@/models/assessment/Assessment';
 import Institution from '@/models/institution/Institution';
 import Volunteer from '@/models/volunteer/Volunteer';
 import Participation from '@/models/participation/Participation';
+import AssessmentDialog from '@/views/volunteer/AssessmentDialog.vue';
 
 @Component({
   components: {
+    AssessmentDialog,
     'enrollment-dialog': EnrollmentDialog,
   },
 })

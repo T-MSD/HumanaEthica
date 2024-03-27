@@ -104,10 +104,10 @@ Cypress.Commands.add('createDemoEntitiesTest1', () => {
     query: "INSERT INTO " + AUTH_USERS_COLUMNS + generateAuthUserTuple(3, "DEMO", "demo-volunteer", 3),
     credentials: credentials,
   })
-});
+
 
   // Insert activity data
-Cypress.Commands.add('createInstitutions', () => {
+
   cy.task('queryDatabase', {
     query: "INSERT INTO public.activity (id, application_deadline, creation_date, description, ending_date, name, participants_number_limit, region, starting_date, state, institution_id) VALUES (1, '2024-08-06 17:58:21.402146', '2024-08-06 17:58:21.402146', 'Enrollment is open', '2024-08-08 17:58:21.402146', 'A1', 1, 'Lisbon', '2024-08-07 17:58:21.402146', 'APPROVED', 1)",
     credentials: credentials,
