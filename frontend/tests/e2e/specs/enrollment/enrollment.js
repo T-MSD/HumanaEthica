@@ -22,7 +22,7 @@ describe('Enrollment', () => {
       cy.get('[data-cy="memberActivitiesTable"] tbody tr')
         .eq(0)
         .children()
-        .eq(3).should('contain', '0');
+        .eq(4).should('contain', '0');
 
       cy.logout();
     });
@@ -73,7 +73,7 @@ describe('Enrollment', () => {
 
       // Assert the first activity has 1 application
       cy.get('[data-cy="memberActivitiesTable"] tbody tr')
-      .eq(0).children().eq(3).should('contain', 1 );
+      .eq(0).children().eq(4).should('contain', 1 );
 
       // Check enrollments
       cy.get('[data-cy="memberActivitiesTable"] tbody tr')
