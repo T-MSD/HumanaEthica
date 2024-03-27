@@ -35,12 +35,15 @@
                 v-on="on"
                 data-cy="reportButton"
                 @click="reportActivity(item)"
-              >warning</v-icon
+                >warning</v-icon
               >
             </template>
             <span>Report Activity</span>
           </v-tooltip>
-          <v-tooltip v-if="item.state === 'APPROVED' && shouldShowApplyButton(item)" bottom>
+          <v-tooltip
+            v-if="item.state === 'APPROVED' && shouldShowApplyButton(item)"
+            bottom
+          >
             <template v-slot:activator="{ on }">
               <!-- New column for Apply for activity button -->
               <v-icon
@@ -49,12 +52,11 @@
                 v-on="on"
                 data-cy="newEnrollment"
                 @click="newEnrollment(item)"
-              >fas fa-sign-in-alt</v-icon
+                >fas fa-sign-in-alt</v-icon
               >
             </template>
             <span>Apply for Activity</span>
           </v-tooltip>
-          <v-tooltip v-if="item.state === 'APPROVED'" bottom>
           <v-tooltip
             v-if="
               activityHasFinished[index] &&
@@ -105,11 +107,6 @@ import RemoteServices from '@/services/RemoteServices';
 import Activity from '@/models/activity/Activity';
 import Enrollment from '@/models/enrollment/Enrollment';
 import EnrollmentDialog from '@/views/volunteer/EnrollmentDialog.vue';
-
-@Component({
-  components: {
-    'enrollment-dialog': EnrollmentDialog,
-  },
 import AssessmentDialog from './AssessmentDialog.vue';
 import { show } from 'cli-cursor';
 import Assessment from '@/models/assessment/Assessment';
@@ -117,6 +114,11 @@ import Institution from '@/models/institution/Institution';
 import Volunteer from '@/models/volunteer/Volunteer';
 import Participation from '@/models/participation/Participation';
 
+@Component({
+  components: {
+    'enrollment-dialog': EnrollmentDialog,
+  },
+})
 @Component({
   methods: { show },
   components: {
@@ -141,7 +143,6 @@ export default class VolunteerActivitiesView extends Vue {
   search: string = '';
   currentEnrollment: Enrollment | null = null;
   editEnrollmentDialog: boolean = false;
-  currentActivity: Activity | null = null;
   headers: object = [
     {
       text: 'Name',
@@ -210,7 +211,7 @@ export default class VolunteerActivitiesView extends Vue {
     await this.$store.dispatch('loading');
     try {
       this.activities = await RemoteServices.getActivities();
-      this.enrollments = await  RemoteServices.getVolunteerEnrollments();
+      this.enrollments = await RemoteServices.getVolunteerEnrollments();
 
       this.assessmentForVolunteer =
         await RemoteServices.getVolunteerAssessments();
@@ -241,7 +242,7 @@ export default class VolunteerActivitiesView extends Vue {
     await this.$store.dispatch('clearLoading');
   }
 
-  newEnrollment(activity : Activity) {
+  newEnrollment(activity: Activity) {
     this.currentEnrollment = new Enrollment();
     this.currentActivity = activity;
     this.editEnrollmentDialog = true;
@@ -250,7 +251,9 @@ export default class VolunteerActivitiesView extends Vue {
   async onSaveEnrollment(enrollment: Enrollment) {
     this.enrollments.unshift(enrollment);
     if (this.currentActivity) {
-      const successfulEnrollment = this.checkSuccessfulEnrollment(this.currentActivity);
+      const successfulEnrollment = this.checkSuccessfulEnrollment(
+        this.currentActivity,
+      );
       // If the enrollment was successful, close the dialog
       if (successfulEnrollment) {
         this.editEnrollmentDialog = false;
@@ -284,8 +287,9 @@ export default class VolunteerActivitiesView extends Vue {
     const isApplicationOpen = currentDate <= applicationDeadline;
 
     // Check if the current user has already applied to the activity
-    const volunteerHasAlreadyEnrolled = this.enrollments.some((enrollment) =>
-      enrollment.activityId === activity.id);
+    const volunteerHasAlreadyEnrolled = this.enrollments.some(
+      (enrollment) => enrollment.activityId === activity.id,
+    );
 
     // O botão deve ser mostrado apenas se o período de candidatura estiver aberto
     // e o voluntário ainda não se candidatou
@@ -294,8 +298,9 @@ export default class VolunteerActivitiesView extends Vue {
 
   checkSuccessfulEnrollment(activity: Activity) {
     // Check if the current user has already applied to the activity
-    const volunteerHasAlreadyEnrolled = this.enrollments.some((enrollment) =>
-        enrollment.activityId === activity.id);
+    const volunteerHasAlreadyEnrolled = this.enrollments.some(
+      (enrollment) => enrollment.activityId === activity.id,
+    );
 
     return volunteerHasAlreadyEnrolled;
   }
