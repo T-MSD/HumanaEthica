@@ -355,6 +355,22 @@ export default class VolunteerActivitiesView extends Vue {
     this.volunteerHasParticipation[this.currentIndex] = false;
     this.assessmentForInstitution.unshift(assessment);
     this.assessmentForVolunteer.unshift(assessment);
+
+    this.activities.forEach((activity, index) => {
+      this.activityFinished(activity, index);
+    });
+
+    this.activities.forEach(() => {
+      this.hasParticipation();
+    });
+
+    this.activities.forEach((activityItem, index) => {
+      this.hasAssessmentForInstitution(
+        activityItem,
+        index,
+        this.assessmentForVolunteer,
+      );
+    });
   }
 
   onCloseAssessmentDialog() {
