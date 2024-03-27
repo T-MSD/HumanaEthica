@@ -1,7 +1,7 @@
 describe('Volunteer', () => {
   beforeEach(() => {
     cy.deleteAllButArs();
-    cy.createInstitutions();
+    cy.createInstitutions1();
 
   });
 

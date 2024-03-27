@@ -115,6 +115,7 @@ Cypress.Commands.add('createDemoEntitiesTest1', () => {
     query: "INSERT INTO " + AUTH_USERS_COLUMNS + generateAuthUserTuple(3, "DEMO", "demo-volunteer", 3),
     credentials: credentials,
   })
+});
 
   // Insert activity data
 Cypress.Commands.add('createInstitutions', () => {
@@ -137,7 +138,7 @@ Cypress.Commands.add('createInstitutions', () => {
 
 
 
-Cypress.Commands.add('createInstitutions', () => {
+Cypress.Commands.add('createInstitutions1', () => {
   cy.task('queryDatabase', {
     query: "INSERT INTO " + INSTITUTION_COLUMNS + "VALUES ('"
         + 1 + "', 't', 'abca428c09862e89', '2024-02-06 17:58:21.402146','demo_institution@mail.com', 'DEMO INSTITUTION', '000000000', '2024-02-06 17:58:21.402134')",
