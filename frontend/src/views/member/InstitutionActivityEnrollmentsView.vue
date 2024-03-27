@@ -44,9 +44,13 @@
       </template>
     </v-data-table>
     <participation-selection-dialog
-      v-if="currentEnrollment && ParticipationDialog"
+      v-if="activity && ParticipationDialog"
       v-model="ParticipationDialog"
+      :participation="currentParticipation"
+      :activity="activity"
+      :enrollment="currentEnrollment"
       v-on:close-participation-dialog="onCloseParticipationDialog"
+      v-on:make-participant="onMakeParticipant"
     />
   </v-card>
 </template>
@@ -68,10 +72,10 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
   activity!: Activity;
   enrollments: Enrollment[] = [];
   search: string = '';
-  participation: Participation = new Participation();
-  currentEnrollment: Enrollment | null = null;
   ParticipationDialog: boolean = false;
   isfull: boolean = true;
+  currentEnrollment: Enrollment | null = null;
+  currentParticipation: Participation | null = null;
 
   headers: object = [
     {
@@ -130,26 +134,24 @@ export default class InstitutionActivityEnrollmentsView extends Vue {
     this.$router.push({ name: 'institution-activities' }).catch(() => {});
   }
 
-  async createParticipation(enrollment: Enrollment) {
-    try {
-      const result = await RemoteServices.registerParticipation(
-        this.$store.getters.getUser.id,
-        this.participation,
-      );
-    } catch (error) {
-      await this.$store.dispatch('error', error);
-    }
-  }
-
   createParticipationDialog(enrollment: Enrollment) {
     this.currentEnrollment = enrollment;
+    this.currentParticipation = new Participation();
     this.ParticipationDialog = true;
+  }
+
+  onMakeParticipant() {
+    if (this.currentEnrollment != null)
+      this.currentEnrollment.participating = true;
+    this.ParticipationDialog = false;
   }
 
   onCloseParticipationDialog() {
     this.currentEnrollment = null;
+    this.currentParticipation = null;
     this.ParticipationDialog = false;
   }
+
 }
 </script>
 

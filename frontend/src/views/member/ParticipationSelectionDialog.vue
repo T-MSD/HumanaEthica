@@ -17,7 +17,8 @@
                     isNumberValid(v) ||
                     'Number of rating must be between 1 and 5',
                 ]"
-                  data-cy="participantsNumberInput"
+                  data-cy="ratingNumberInput"
+                  v-model="createParticipation.rating"
               ></v-text-field>
             </v-col>
           </v-row>
@@ -35,7 +36,8 @@
         <v-btn
             color="blue-darken-1"
             variant="text"
-            data-cy="saveActivity"
+            data-cy="makeParticipation"
+            @click="makeParticipation"
         >
           Make Participant
         </v-btn>
@@ -46,10 +48,12 @@
 <script lang="ts">
 import { Vue, Component, Prop, Model } from 'vue-property-decorator';
 import Participation from '@/models/participation/Participation';
+import Enrollment from '@/models/enrollment/Enrollment'
 import RemoteServices from '@/services/RemoteServices';
 import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
 import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
 import { ISOtoString } from '@/services/ConvertDateService';
+import Activity from '@/models/activity/Activity';
 
 
 @Component({
@@ -58,7 +62,11 @@ import { ISOtoString } from '@/services/ConvertDateService';
 export default class ParticipationSelectionDialog extends Vue {
   @Model('dialog', Boolean) dialog!: boolean;
   @Prop({ type: Participation, required: true }) readonly participation!: Participation;
+  @Prop({ type: Activity, required: true }) readonly activity!: Activity;
+  @Prop({ type: Enrollment, required: true }) readonly enrollment!: Enrollment;
+
   createParticipation: Participation = new Participation();
+
 
   cypressCondition: boolean = false;
 
@@ -73,6 +81,24 @@ export default class ParticipationSelectionDialog extends Vue {
     return parsedValue >= 1 && parsedValue <= 5;
   }
 
+  async makeParticipation() {
+    if ((this.$refs.form as Vue & { validate: () => boolean }).validate()) {
+      try {
+        if (this.activity && this.activity.id !== null && this.enrollment.volunteerName != null) {
+          this.createParticipation.volunteerId = this.enrollment.volunteerID;
+          const result = await RemoteServices.registerParticipation(
+            this.activity.id,
+            this.createParticipation,
+          );
+          this.$emit('make-participant', result);
+        } else {
+          throw new Error('Activity ID is null or undefined');
+        }
+      } catch (error) {
+        await this.$store.dispatch('error', error);
+      }
+    }
+  }
 }
 </script>
 
