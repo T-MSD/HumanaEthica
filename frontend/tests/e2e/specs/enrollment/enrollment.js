@@ -85,7 +85,7 @@ describe('Enrollment', () => {
       cy.get('[data-cy="activityEnrollmentsTable"] tbody tr')
         .eq(0)
         .children()
-        .eq(0)
+        .eq(1)
         .should('contain', MOTIVATION);
 
       cy.wait('@getEnrollments');
